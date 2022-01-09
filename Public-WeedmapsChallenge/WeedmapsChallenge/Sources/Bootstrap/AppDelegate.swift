@@ -4,17 +4,19 @@
 
 import UIKit
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    // MARK: Properties
-    
     var window: UIWindow?
 
-    // MARK: Lifecycle
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let homeViewController = HomeViewController()
+        let navigationController = UINavigationController(rootViewController: homeViewController)
+        let window = UIWindow()
+        window.rootViewController = navigationController
+        self.window = window
+        self.window?.makeKeyAndVisible()
+
         return true
     }
 }
