@@ -4,7 +4,11 @@
 
 import Foundation
 
+struct PageResponse: Decodable {
+    let businesses: [Business]
+}
 
 struct Business: Decodable {
-    // IMPLEMENT
+    let id: String
+    let name: String
 }

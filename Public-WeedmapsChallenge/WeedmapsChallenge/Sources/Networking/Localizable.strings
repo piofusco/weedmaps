@@ -1,0 +1,10 @@
+/****************************************************************************/
+/* Localization file */
+
+
+"Description of bad request" = "Description of bad request";
+"Description of invalid JSON" = "Description of invalid JSON";
+"Description of invalid URL" = "Description of invalid URL";
+"Description of internal server error" = "Description of internal server error";
+"Description of no data returned" = "Description of no data returned";
+"Description of unexpected" = "Description of unexpected";
