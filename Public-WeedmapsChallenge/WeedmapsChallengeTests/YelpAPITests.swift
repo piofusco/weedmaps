@@ -3,6 +3,7 @@
 // Copyright (c) 2022 Weedmaps, LLC. All rights reserved.
 //
 
+import CoreLocation
 import XCTest
 
 @testable import WeedmapsChallenge
@@ -14,10 +15,10 @@ class YelpAPITest: XCTestCase {
         mockURLSession.nextDataTask = mockURLSessionDataTask
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
 
-        subject.search(term: "banana") { _ in }
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { _ in }
 
         XCTAssertTrue(mockURLSessionDataTask.didResume)
-        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/businesses/search?limit=15&term=banana"))
+        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/businesses/search?limit=15&term=banana&latitude=37.786882&longitude=-122.399972"))
     }
 
     func test__search__200__callCompletionWithData() {
@@ -29,7 +30,7 @@ class YelpAPITest: XCTestCase {
         var completionDidRun = false
         var returnedBusinessesResponse: PageResponse?
 
-        subject.search(term: "not empty") { result in
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             completionDidRun = true
 
             switch result {
@@ -49,7 +50,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "not empty") { result in
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -70,7 +71,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: mockJSONDecoder)
         var completionDidRun = false
 
-        subject.search(term: "not empty") { result in
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -89,7 +90,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "not empty") { result in
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -108,7 +109,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "not empty") { result in
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -127,7 +128,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "not empty") { result in
+        subject.search(term: "banana", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(_): completionDidRun = true
@@ -141,7 +142,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: MockURLSession(), decoder: MockJSONDecoder<PageResponse>())
         var completionDidRun = false
 
-        subject.search(term: "") { result in
+        subject.search(term: "", latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)) { result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(_): completionDidRun = true
