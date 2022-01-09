@@ -7,7 +7,7 @@ import Foundation
 import CoreLocation
 
 protocol YellowPagesAPI {
-    func search(term: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, completion: @escaping (Result<PageResponse, Error>) -> ())
+    func search(term: String, location: CLLocation, completion: @escaping (Result<PageResponse, Error>) -> ())
 }
 
 class YelpAPI: YellowPagesAPI {
@@ -26,18 +26,13 @@ class YelpAPI: YellowPagesAPI {
         self.decoder = decoder
     }
 
-    func search(term: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, completion: @escaping (Result<PageResponse, Error>) -> ()) {
-        guard !term.isEmpty else {
-            completion(Result.failure(YelpError.unexpected(code: -1)))
-            return
-         }
-
+    func search(term: String, location: CLLocation, completion: @escaping (Result<PageResponse, Error>) -> ()) {
         var urlComponents = baseURLComponents
         urlComponents.queryItems = [
             URLQueryItem(name: "limit", value: "15"),
             URLQueryItem(name: "term", value: term),
-            URLQueryItem(name: "latitude", value: "\(latitude)"),
-            URLQueryItem(name: "longitude", value: "\(longitude)"),
+            URLQueryItem(name: "latitude", value: "\(location.coordinate.latitude)"),
+            URLQueryItem(name: "longitude", value: "\(location.coordinate.longitude)"),
         ]
         urlComponents.path = "/v3/businesses/search"
 
