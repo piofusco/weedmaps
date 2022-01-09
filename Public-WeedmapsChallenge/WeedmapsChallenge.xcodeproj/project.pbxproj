@@ -18,11 +18,15 @@
 		5ABB14B52167C6EB00A2CB2C /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14B42167C6EB00A2CB2C /* Business.swift */; };
 		5ABB14BC2167CF2400A2CB2C /* HomeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */; };
 		5ABB14BE2167D2D900A2CB2C /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */; };
+		BA6E30931CFAFE5D55BB6477 /* MockSearchViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E31CD7C2A2BF8FCE7688C /* MockSearchViewModelDelegate.swift */; };
 		BA6E31C175C739EE7402B8F2 /* YelpAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E39F33F64B892B7651C11 /* YelpAPITests.swift */; };
+		BA6E31E155B74C61E40F5543 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E36E280F88AA40877453A /* HomeViewModel.swift */; };
 		BA6E32F2729ADD64C04B0684 /* WeedmapsURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E355FA01A1849BB133FD4 /* WeedmapsURLSession.swift */; };
 		BA6E336460D73B231A671FF3 /* MockJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3E392827291714DE0A90 /* MockJSONDecoder.swift */; };
 		BA6E34BF721DC734BD393220 /* YelpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3D2C263B97BDA986463E /* YelpAPI.swift */; };
+		BA6E386C3D89DC7547C7F2C8 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3BE957AFEFE62E26FA1F /* HomeViewModelTests.swift */; };
 		BA6E38E3D3D54AEBABBD8DE9 /* WeedmapsJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E30FB0C9DBABB8D818B84 /* WeedmapsJSONDecoder.swift */; };
+		BA6E398D883D560F4E29D090 /* MockYellowPagesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3A55DC58FAEDCA2CE35E /* MockYellowPagesAPI.swift */; };
 		BA6E3C6A5E5DACEBFC831E49 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3A4161B7A45E4857BAA1 /* MockURLSession.swift */; };
 		BA6E3C790C45CD831825ABBD /* YelpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3E2AFF272823D23B4395 /* YelpError.swift */; };
 		BA6E3E3E7B6B176CFEA9240A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA6E322785D95AFA2615E522 /* Localizable.strings */; };
@@ -64,10 +68,14 @@
 		5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailViewController.swift; sourceTree = "<group>"; };
 		5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessCell.swift; sourceTree = "<group>"; };
 		BA6E30FB0C9DBABB8D818B84 /* WeedmapsJSONDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeedmapsJSONDecoder.swift; path = Networking/WeedmapsJSONDecoder.swift; sourceTree = "<group>"; };
+		BA6E31CD7C2A2BF8FCE7688C /* MockSearchViewModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockSearchViewModelDelegate.swift; path = Mocks/MockSearchViewModelDelegate.swift; sourceTree = "<group>"; };
 		BA6E322785D95AFA2615E522 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = Networking/Localizable.strings; sourceTree = "<group>"; };
 		BA6E355FA01A1849BB133FD4 /* WeedmapsURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeedmapsURLSession.swift; path = Networking/WeedmapsURLSession.swift; sourceTree = "<group>"; };
+		BA6E36E280F88AA40877453A /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		BA6E39F33F64B892B7651C11 /* YelpAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpAPITests.swift; sourceTree = "<group>"; };
 		BA6E3A4161B7A45E4857BAA1 /* MockURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockURLSession.swift; path = Mocks/MockURLSession.swift; sourceTree = "<group>"; };
+		BA6E3A55DC58FAEDCA2CE35E /* MockYellowPagesAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockYellowPagesAPI.swift; path = Mocks/MockYellowPagesAPI.swift; sourceTree = "<group>"; };
+		BA6E3BE957AFEFE62E26FA1F /* HomeViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		BA6E3D2C263B97BDA986463E /* YelpAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpAPI.swift; path = Networking/YelpAPI.swift; sourceTree = "<group>"; };
 		BA6E3E2AFF272823D23B4395 /* YelpError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpError.swift; path = Networking/YelpError.swift; sourceTree = "<group>"; };
 		BA6E3E392827291714DE0A90 /* MockJSONDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockJSONDecoder.swift; path = Mocks/MockJSONDecoder.swift; sourceTree = "<group>"; };
@@ -135,6 +143,9 @@
 				BA6E39F33F64B892B7651C11 /* YelpAPITests.swift */,
 				BA6E3A4161B7A45E4857BAA1 /* MockURLSession.swift */,
 				BA6E3E392827291714DE0A90 /* MockJSONDecoder.swift */,
+				BA6E3BE957AFEFE62E26FA1F /* HomeViewModelTests.swift */,
+				BA6E3A55DC58FAEDCA2CE35E /* MockYellowPagesAPI.swift */,
+				BA6E31CD7C2A2BF8FCE7688C /* MockSearchViewModelDelegate.swift */,
 			);
 			path = WeedmapsChallengeTests;
 			sourceTree = "<group>";
@@ -153,6 +164,7 @@
 			children = (
 				5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */,
 				5ABB147E2167C42300A2CB2C /* HomeViewController.swift */,
+				BA6E36E280F88AA40877453A /* HomeViewModel.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -362,6 +374,7 @@
 				BA6E32F2729ADD64C04B0684 /* WeedmapsURLSession.swift in Sources */,
 				BA6E3C790C45CD831825ABBD /* YelpError.swift in Sources */,
 				BA6E38E3D3D54AEBABBD8DE9 /* WeedmapsJSONDecoder.swift in Sources */,
+				BA6E31E155B74C61E40F5543 /* HomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +386,9 @@
 				BA6E31C175C739EE7402B8F2 /* YelpAPITests.swift in Sources */,
 				BA6E3C6A5E5DACEBFC831E49 /* MockURLSession.swift in Sources */,
 				BA6E336460D73B231A671FF3 /* MockJSONDecoder.swift in Sources */,
+				BA6E386C3D89DC7547C7F2C8 /* HomeViewModelTests.swift in Sources */,
+				BA6E398D883D560F4E29D090 /* MockYellowPagesAPI.swift in Sources */,
+				BA6E30931CFAFE5D55BB6477 /* MockSearchViewModelDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
