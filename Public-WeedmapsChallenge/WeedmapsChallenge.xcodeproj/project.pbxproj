@@ -11,7 +11,6 @@
 		5ABB147D2167C42300A2CB2C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB147C2167C42300A2CB2C /* AppDelegate.swift */; };
 		5ABB147F2167C42300A2CB2C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB147E2167C42300A2CB2C /* HomeViewController.swift */; };
 		5ABB14812167C42300A2CB2C /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14802167C42300A2CB2C /* FavoritesViewController.swift */; };
-		5ABB14842167C42400A2CB2C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ABB14822167C42400A2CB2C /* Main.storyboard */; };
 		5ABB14862167C42600A2CB2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ABB14852167C42600A2CB2C /* Assets.xcassets */; };
 		5ABB14892167C42600A2CB2C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ABB14872167C42600A2CB2C /* LaunchScreen.storyboard */; };
 		5ABB14942167C42700A2CB2C /* YelpAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14932167C42700A2CB2C /* YelpAPIClientTests.swift */; };
@@ -19,9 +18,6 @@
 		5ABB14B52167C6EB00A2CB2C /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14B42167C6EB00A2CB2C /* Business.swift */; };
 		5ABB14BC2167CF2400A2CB2C /* HomeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */; };
 		5ABB14BE2167D2D900A2CB2C /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */; };
-		5ABB14C02167D31100A2CB2C /* BusinessCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ABB14BF2167D31100A2CB2C /* BusinessCell.xib */; };
-		5ABB14C22167D50300A2CB2C /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ABB14C12167D50300A2CB2C /* Favorites.storyboard */; };
-		5ABB14C42167D51000A2CB2C /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ABB14C32167D51000A2CB2C /* Home.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,7 +43,6 @@
 		5ABB147C2167C42300A2CB2C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5ABB147E2167C42300A2CB2C /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		5ABB14802167C42300A2CB2C /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
-		5ABB14832167C42400A2CB2C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5ABB14852167C42600A2CB2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5ABB14882167C42600A2CB2C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5ABB148A2167C42600A2CB2C /* WeedmapsChallenge-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WeedmapsChallenge-Info.plist"; sourceTree = "<group>"; };
@@ -60,9 +55,6 @@
 		5ABB14B42167C6EB00A2CB2C /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
 		5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailViewController.swift; sourceTree = "<group>"; };
 		5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessCell.swift; sourceTree = "<group>"; };
-		5ABB14BF2167D31100A2CB2C /* BusinessCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BusinessCell.xib; sourceTree = "<group>"; };
-		5ABB14C12167D50300A2CB2C /* Favorites.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
-		5ABB14C32167D51000A2CB2C /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,7 +132,6 @@
 		5ABB14AC2167C5DD00A2CB2C /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				5ABB14C32167D51000A2CB2C /* Home.storyboard */,
 				5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */,
 				5ABB147E2167C42300A2CB2C /* HomeViewController.swift */,
 			);
@@ -150,7 +141,6 @@
 		5ABB14AD2167C5E600A2CB2C /* Favorites */ = {
 			isa = PBXGroup;
 			children = (
-				5ABB14C12167D50300A2CB2C /* Favorites.storyboard */,
 				5ABB14802167C42300A2CB2C /* FavoritesViewController.swift */,
 				5A1AC182216D668500E15B8F /* Favorite.swift */,
 			);
@@ -164,7 +154,6 @@
 				5ABB14AF2167C63000A2CB2C /* Bootstrap */,
 				5ABB14AD2167C5E600A2CB2C /* Favorites */,
 				5ABB14AC2167C5DD00A2CB2C /* Home */,
-				5ABB14B02167C64100A2CB2C /* Navigation */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -176,14 +165,6 @@
 				5ABB14872167C42600A2CB2C /* LaunchScreen.storyboard */,
 			);
 			path = Bootstrap;
-			sourceTree = "<group>";
-		};
-		5ABB14B02167C64100A2CB2C /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				5ABB14822167C42400A2CB2C /* Main.storyboard */,
-			);
-			path = Navigation;
 			sourceTree = "<group>";
 		};
 		5ABB14B12167C65000A2CB2C /* Assets */ = {
@@ -208,7 +189,6 @@
 			children = (
 				5ABB14B42167C6EB00A2CB2C /* Business.swift */,
 				5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */,
-				5ABB14BF2167D31100A2CB2C /* BusinessCell.xib */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -276,7 +256,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "Weedmaps, LLC";
 				TargetAttributes = {
 					5ABB14782167C42300A2CB2C = {
@@ -321,11 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5ABB14892167C42600A2CB2C /* LaunchScreen.storyboard in Resources */,
-				5ABB14C02167D31100A2CB2C /* BusinessCell.xib in Resources */,
 				5ABB14862167C42600A2CB2C /* Assets.xcassets in Resources */,
-				5ABB14C42167D51000A2CB2C /* Home.storyboard in Resources */,
-				5ABB14842167C42400A2CB2C /* Main.storyboard in Resources */,
-				5ABB14C22167D50300A2CB2C /* Favorites.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,14 +368,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		5ABB14822167C42400A2CB2C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5ABB14832167C42400A2CB2C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		5ABB14872167C42600A2CB2C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -437,6 +405,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -498,6 +467,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
