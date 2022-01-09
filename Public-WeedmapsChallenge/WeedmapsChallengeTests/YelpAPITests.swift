@@ -15,10 +15,10 @@ class YelpAPITest: XCTestCase {
         mockURLSession.nextDataTask = mockURLSessionDataTask
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { _ in }
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ _ in }
 
         XCTAssertTrue(mockURLSessionDataTask.didResume)
-        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/businesses/search?limit=15&term=banana&latitude=37.786882&longitude=-122.399972"))
+        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/businesses/search?limit=15&term=banana&latitude=37.786882&longitude=-122.399972&offset=0"))
     }
 
     func test__search__200__callCompletionWithData() {
@@ -30,7 +30,7 @@ class YelpAPITest: XCTestCase {
         var completionDidRun = false
         var returnedBusinessesResponse: PageResponse?
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { result in
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ result in
             completionDidRun = true
 
             switch result {
@@ -50,7 +50,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { result in
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -71,7 +71,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: mockJSONDecoder)
         var completionDidRun = false
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { result in
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -90,7 +90,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { result in
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -109,7 +109,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { result in
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(let error):
@@ -128,7 +128,7 @@ class YelpAPITest: XCTestCase {
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
 
-        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972))) { result in
+        subject.search(term: "banana", location: CLLocation(latitude: CLLocationDegrees(37.786882), longitude: CLLocationDegrees(-122.399972)), offset: 0){ result in
             switch result {
             case .success(_): XCTFail("result shouldn't be a failure")
             case .failure(_): completionDidRun = true
