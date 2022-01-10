@@ -3,16 +3,43 @@
 // Copyright (c) 2022 Weedmaps, LLC. All rights reserved.
 //
 
+import Foundation
+
 @testable import WeedmapsChallenge
 
 class MockSearchViewModelDelegate: SearchViewModelDelegate {
     var didCallSearchBusinesses = false
 
-    var lastSuccess: Bool?
 
-    func searchDidFinish(success: Bool) {
-        lastSuccess = success
-
+    func didUpdateBusinesses() {
         didCallSearchBusinesses = true
+    }
+
+    var searchDidFail = false
+    var searchErrors = [YelpError]()
+
+    func searchFailed(with error: Error) {
+        searchDidFail = true
+        searchErrors.append(error as! YelpError)
+    }
+
+    var didFetchImage = false
+    var fetchedImageRows = [Int]()
+    var imageData = [Data]()
+
+    func didFetchImage(for row: Int, data: Data) {
+        didFetchImage = true
+        fetchedImageRows.append(row)
+        imageData.append(data)
+    }
+
+    var imageFetchDidFail = false
+    var failedImageRows = [Int]()
+    var imageFetchErrors = [YelpError]()
+
+    func imageFetchFailed(for row: Int, with error: Error) {
+        imageFetchDidFail = true
+        failedImageRows.append(row)
+        imageFetchErrors.append(error as! YelpError)
     }
 }

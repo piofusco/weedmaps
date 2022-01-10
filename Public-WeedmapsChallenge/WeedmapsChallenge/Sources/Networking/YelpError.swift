@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum YelpError: Error {
+enum YelpError: Error, Equatable {
     case badRequest
     case invalidJSON
     case invalidURL

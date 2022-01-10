@@ -10,7 +10,7 @@ import XCTest
 class HomeViewModelTests: XCTestCase {
     func test__search__withLocation__success__willCallDelegate() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextResults = [
+        mockAPI.nextPageResults = [
             .success(
                     PageResponse(
                             businesses: [
@@ -33,17 +33,12 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
-        guard let lastSuccess = mockDelegate.lastSuccess else {
-            XCTFail("last success never set")
-            return
-        }
-        XCTAssertTrue(lastSuccess)
         XCTAssertEqual(subject.businesses.count, 2)
     }
 
     func test__searchingNewTerm__overwriteOldResults() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextResults = [
+        mockAPI.nextPageResults = [
             .success(
                     PageResponse(
                             businesses: [
@@ -73,11 +68,6 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
-        guard let lastSuccess = mockDelegate.lastSuccess else {
-            XCTFail("last success never set")
-            return
-        }
-        XCTAssertTrue(lastSuccess)
         XCTAssertEqual(subject.businesses.count, 2)
 
         subject.search(term: "another term")
@@ -88,7 +78,7 @@ class HomeViewModelTests: XCTestCase {
 
     func test__search__getMoreResults__usesPreviousSearchTerm__appendsNewBusinesses() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextResults = [
+        mockAPI.nextPageResults = [
             .success(
                     PageResponse(
                             businesses: [
@@ -120,11 +110,6 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
-        guard let lastSuccess = mockDelegate.lastSuccess else {
-            XCTFail("last success never set")
-            return
-        }
-        XCTAssertTrue(lastSuccess)
         XCTAssertEqual(subject.businesses.count, 2)
 
         subject.loadNextPageOfBusinesses()
@@ -136,7 +121,7 @@ class HomeViewModelTests: XCTestCase {
 
     func test__loadNextPageOfBusinesses__lastTermIsNil__doNothing() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextResults = [.success(PageResponse(businesses: [
+        mockAPI.nextPageResults = [.success(PageResponse(businesses: [
             Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1")
         ]))]
         let mockDelegate = MockSearchViewModelDelegate()
@@ -152,12 +137,11 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertNil(mockAPI.lastTerm)
         XCTAssertNil(mockAPI.lastLocation)
         XCTAssertFalse(mockDelegate.didCallSearchBusinesses)
-        XCTAssertNil(mockDelegate.lastSuccess)
     }
 
     func test__search__withLocation__failure__willCallDelegateWithFailure() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextResults = [.failure(YelpError.unexpected(code: -1))]
+        mockAPI.nextPageResults = [.failure(YelpError.unexpected(code: -1))]
         let mockDelegate = MockSearchViewModelDelegate()
         let subject = SearchViewModel(api: mockAPI)
         subject.delegate = mockDelegate
@@ -170,12 +154,9 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastTerm, "some term")
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
-        XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
-        guard let lastSuccess = mockDelegate.lastSuccess else {
-            XCTFail("last success never set")
-            return
-        }
-        XCTAssertFalse(lastSuccess)
+        XCTAssertFalse(mockDelegate.didCallSearchBusinesses)
+        XCTAssertTrue(mockDelegate.searchDidFail)
+        XCTAssertEqual(mockDelegate.searchErrors[0], YelpError.unexpected(code: -1))
         XCTAssertEqual(subject.businesses.count, 0)
     }
 
@@ -189,5 +170,51 @@ class HomeViewModelTests: XCTestCase {
 
         XCTAssertFalse(mockAPI.didSearch)
         XCTAssertFalse(mockDelegate.didCallSearchBusinesses)
+    }
+
+    func test__getImageData__success__willCallDelegate() {
+        let mockAPI = MockYellowPagesAPI()
+        mockAPI.nextImageResults = [
+            .success("first".data(using: .utf8)!),
+            .success("second".data(using: .utf8)!),
+            .success("third".data(using: .utf8)!),
+            .success("fourth".data(using: .utf8)!)
+        ]
+        let mockDelegate = MockSearchViewModelDelegate()
+        let subject = SearchViewModel(api: mockAPI)
+        subject.delegate = mockDelegate
+
+        subject.getImageData(index: 0, urlString: "http://www.image0.com")
+        subject.getImageData(index: 1, urlString: "http://www.image1.com")
+        subject.getImageData(index: 2, urlString: "http://www.image2.com")
+
+        XCTAssertTrue(mockAPI.didFetchImage)
+        XCTAssertEqual(mockAPI.previousURLStrings[0], "http://www.image0.com")
+        XCTAssertEqual(mockDelegate.fetchedImageRows[0], 0)
+        XCTAssertEqual(mockDelegate.imageData[0], "first".data(using: .utf8))
+        XCTAssertEqual(mockAPI.previousURLStrings[1], "http://www.image1.com")
+        XCTAssertEqual(mockDelegate.fetchedImageRows[1], 1)
+        XCTAssertEqual(mockDelegate.imageData[1], "second".data(using: .utf8))
+        XCTAssertEqual(mockAPI.previousURLStrings[2], "http://www.image2.com")
+        XCTAssertEqual(mockDelegate.fetchedImageRows[2], 2)
+        XCTAssertEqual(mockDelegate.imageData[2], "third".data(using: .utf8))
+    }
+
+    func test__getImageData__failure__willCallDelegateWithError() {
+        let mockAPI = MockYellowPagesAPI()
+        mockAPI.nextImageResults = [.failure(YelpError.badRequest)]
+        let mockDelegate = MockSearchViewModelDelegate()
+        let subject = SearchViewModel(api: mockAPI)
+        subject.delegate = mockDelegate
+
+        subject.getImageData(index: 0, urlString: "http://www.image0.com")
+
+        XCTAssertTrue(mockAPI.didFetchImage)
+        XCTAssertEqual(mockAPI.previousURLStrings[0], "http://www.image0.com")
+        XCTAssertTrue(mockDelegate.imageFetchDidFail)
+        XCTAssertEqual(mockDelegate.failedImageRows[0], 0)
+        XCTAssertEqual(mockDelegate.imageFetchErrors[0], YelpError.badRequest)
+        XCTAssertEqual(mockDelegate.fetchedImageRows.count, 0)
+        XCTAssertEqual(mockDelegate.imageData.count, 0)
     }
 }

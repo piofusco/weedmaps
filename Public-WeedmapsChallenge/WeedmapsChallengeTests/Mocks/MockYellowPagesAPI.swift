@@ -10,10 +10,9 @@ class MockYellowPagesAPI: YellowPagesAPI {
     var didSearch = false
     var lastTerm: String?
     var lastLocation: CLLocation?
-    public var lastOffset: Int?
+    var lastOffset: Int?
 
-    var nextResults: [Result<PageResponse, Error>] = []
-
+    var nextPageResults: [Result<PageResponse, Error>] = []
 
     func search(term: String, location: CLLocation, offset: Int, completion: @escaping (Result<PageResponse, Error>) -> ()) {
         didSearch = true
@@ -22,12 +21,22 @@ class MockYellowPagesAPI: YellowPagesAPI {
         lastLocation = location
         lastOffset = offset
 
-        if nextResults.count > 0 {
-            completion(nextResults.removeFirst())
+        if nextPageResults.count > 0 {
+            completion(nextPageResults.removeFirst())
         }
     }
 
-    func fetchImageData(urlString: String, completion: @escaping (Result<Data, Error>) -> ()) {
+    var didFetchImage = false
+    var previousURLStrings = [String]()
 
+    var nextImageResults: [Result<Data, Error>] = []
+
+    func fetchImageData(urlString: String, completion: @escaping (Result<Data, Error>) -> ()) {
+        didFetchImage = true
+        previousURLStrings.append(urlString)
+
+        if nextImageResults.count > 0 {
+            completion(nextImageResults.removeFirst())
+        }
     }
 }

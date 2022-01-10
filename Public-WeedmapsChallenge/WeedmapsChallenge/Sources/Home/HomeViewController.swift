@@ -68,12 +68,22 @@ extension HomeViewController: UICollectionViewDataSource {
 }
 
 extension HomeViewController: SearchViewModelDelegate {
-    func searchDidFinish(success: Bool) {
+    func didUpdateBusinesses() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
 
             self.collectionView.reloadData()
         }
+    }
+
+    func searchFailed(with error: Error) {
+
+    }
+
+    func didFetchImage(for row: Int, data: Data) {
+    }
+
+    func imageFetchFailed(for row: Int, with error: Error) {
     }
 }
 
