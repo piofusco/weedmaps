@@ -9,8 +9,7 @@ class BusinessCollectionViewCell: UICollectionViewCell {
     private lazy var iconImage: UIImageView = {
         let iconImage = UIImageView()
         iconImage.translatesAutoresizingMaskIntoConstraints = false
-        // iconImage.isHidden = true
-        iconImage.backgroundColor = .blue
+        iconImage.isHidden = true
         iconImage.layer.cornerRadius = 5
         iconImage.layer.masksToBounds = true
         return iconImage
@@ -63,16 +62,19 @@ class BusinessCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         nameLabel.text = ""
-        // activityIndicator.startAnimating()
-        // iconImage.isHidden = true
-        // iconImage.image = nil
+        activityIndicator.startAnimating()
+        iconImage.isHidden = true
+        iconImage.image = nil
     }
 
-    func setupViews(name: String) {
+    func setupLabels(name: String) {
         nameLabel.text = name
-        // activityIndicator.stopAnimating()
-        // iconImage.isHidden = false
-        // iconImage.image = UIImage(data: imageData)
-        setNeedsLayout()
+        setNeedsLayout() // do we need this?
+    }
+
+    func updateImage(data: Data) {
+        activityIndicator.stopAnimating()
+        iconImage.isHidden = false
+        iconImage.image = UIImage(data: data)
     }
 }

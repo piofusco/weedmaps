@@ -25,9 +25,11 @@ class HomeViewController: UIViewController {
     private var searchController = UISearchController(searchResultsController: nil)
 
     private let viewModel: HomeViewModel
+    private let mainQueue: MainQueue
 
-    init(viewModel: HomeViewModel) {
+    init(viewModel: HomeViewModel, mainQueue: MainQueue) {
         self.viewModel = viewModel
+        self.mainQueue = mainQueue
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,7 +63,13 @@ extension HomeViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        cell.setupViews(name: viewModel.businesses[indexPath.row].name)
+        cell.setupLabels(name: viewModel.businesses[indexPath.row].name)
+
+        if let imageData = viewModel.imageData[indexPath.row] {
+            cell.updateImage(data: imageData)
+        } else {
+            viewModel.fetchImageData(index: indexPath.row, urlString: viewModel.businesses[indexPath.row].imageURL)
+        }
 
         return cell
     }
@@ -81,6 +89,11 @@ extension HomeViewController: SearchViewModelDelegate {
     }
 
     func didFetchImage(for row: Int, data: Data) {
+        mainQueue.async { [weak self] in
+            guard let self = self else { return }
+
+            self.collectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
+        }
     }
 
     func imageFetchFailed(for row: Int, with error: Error) {

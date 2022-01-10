@@ -4,6 +4,7 @@
 
 import UIKit
 import CoreLocation
+import Foundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         locationManager.requestWhenInUseAuthorization()
         locationManager.startMonitoringSignificantLocationChanges() // need to eventually stop tracking this
 
-        let homeViewController = HomeViewController(viewModel: searchViewModel)
+        let homeViewController = HomeViewController(viewModel: searchViewModel, mainQueue: WeedmapsMainQueue())
         searchViewModel.delegate = homeViewController
         let navigationController = UINavigationController(rootViewController: homeViewController)
         let window = UIWindow()
