@@ -6,8 +6,8 @@
 import Foundation
 import CoreLocation
 
-protocol SearchViewModelDelegate: AnyObject {
-    func didUpdateBusinesses()
+protocol HomeViewModelDelegate: AnyObject {
+    func didSearch()
     func searchFailed(with error: Error)
 
     func didFetchImage(for row: Int, data: Data)
@@ -16,8 +16,8 @@ protocol SearchViewModelDelegate: AnyObject {
 
 protocol HomeViewModel: AnyObject {
     var businesses: [Business] { get }
-    var imageData: [Data?] { get }
-    var delegate: SearchViewModelDelegate? { get set }
+    var imageCache: [Data?] { get }
+    var delegate: HomeViewModelDelegate? { get set }
 
     func search(term: String)
     func loadNextPageOfBusinesses()
@@ -26,11 +26,11 @@ protocol HomeViewModel: AnyObject {
 
 class SearchViewModel: NSObject, HomeViewModel {
     private(set) var businesses: [Business] = []
-    private(set) var imageData: [Data?] = []
+    private(set) var imageCache: [Data?] = []
     private var location: CLLocation?
     private var lastSearchedTerm: String?
 
-    weak var delegate: SearchViewModelDelegate?
+    weak var delegate: HomeViewModelDelegate?
 
     private let api: YellowPagesAPI
 
@@ -62,12 +62,12 @@ class SearchViewModel: NSObject, HomeViewModel {
             case .success(let response):
                 if !overwrite {
                     self.businesses.append(contentsOf: response.businesses)
-                    self.imageData.append(contentsOf: [Data?](repeating: nil, count: response.businesses.count))
+                    self.imageCache.append(contentsOf: [Data?](repeating: nil, count: response.businesses.count))
                 } else {
                     self.businesses = response.businesses
-                    self.imageData = [Data?](repeating: nil, count: self.businesses.count)
+                    self.imageCache = [Data?](repeating: nil, count: self.businesses.count)
                 }
-                self.delegate?.didUpdateBusinesses()
+                self.delegate?.didSearch()
             case .failure(let error):
                 self.delegate?.searchFailed(with: error)
             }
@@ -81,7 +81,7 @@ class SearchViewModel: NSObject, HomeViewModel {
             switch result {
             case .success(let data):
                 self.delegate?.didFetchImage(for: index, data: data)
-                self.imageData[index] = data
+                self.imageCache[index] = data
             case .failure(let error):
                 self.delegate?.imageFetchFailed(for: index, with: error)
             }

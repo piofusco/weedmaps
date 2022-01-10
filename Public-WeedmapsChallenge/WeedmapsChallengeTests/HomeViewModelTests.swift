@@ -32,9 +32,9 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastTerm, "some term")
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
-        XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
-        XCTAssertEqual(subject.imageData.count, 2)
+        XCTAssertEqual(subject.imageCache.count, 2)
     }
 
     func test__searchingNewTerm__overwriteOldResults() {
@@ -68,15 +68,15 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastTerm, "some term")
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
-        XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
-        XCTAssertEqual(subject.imageData.count, 2)
+        XCTAssertEqual(subject.imageCache.count, 2)
 
         subject.search(term: "another term")
 
         XCTAssertEqual(mockAPI.lastTerm, "another term")
         XCTAssertEqual(subject.businesses.count, 1)
-        XCTAssertEqual(subject.imageData.count, 1)
+        XCTAssertEqual(subject.imageCache.count, 1)
     }
 
     func test__search__getMoreResults__usesPreviousSearchTerm__appendsNewBusinesses() {
@@ -112,16 +112,17 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastTerm, "some term")
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
-        XCTAssertTrue(mockDelegate.didCallSearchBusinesses)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
-        XCTAssertEqual(subject.imageData.count, 2)
+        XCTAssertEqual(subject.imageCache.count, 2)
 
         subject.loadNextPageOfBusinesses()
 
         XCTAssertEqual(mockAPI.lastTerm, "some term")
         XCTAssertEqual(mockAPI.lastOffset, 2)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 2)
         XCTAssertEqual(subject.businesses.count, 5)
-        XCTAssertEqual(subject.imageData.count, 5)
+        XCTAssertEqual(subject.imageCache.count, 5)
     }
 
     func test__search__withLocation__failure__willCallDelegateWithFailure() {
@@ -137,7 +138,7 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastTerm, "some term")
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.78))
         XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.39))
-        XCTAssertFalse(mockDelegate.didCallSearchBusinesses)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 0)
         XCTAssertTrue(mockDelegate.searchDidFail)
         XCTAssertEqual(mockDelegate.searchErrors[0], YelpError.unexpected(code: -1))
         XCTAssertEqual(subject.businesses.count, 0)
@@ -152,7 +153,7 @@ class HomeViewModelTests: XCTestCase {
         subject.search(term: "some term")
 
         XCTAssertFalse(mockAPI.didSearch)
-        XCTAssertFalse(mockDelegate.didCallSearchBusinesses)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 0)
     }
 
     func test__loadNextPageOfBusinesses__lastTermIsNil__doNothing() {
@@ -172,7 +173,7 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(subject.businesses.count, 0)
         XCTAssertNil(mockAPI.lastTerm)
         XCTAssertNil(mockAPI.lastLocation)
-        XCTAssertFalse(mockDelegate.didCallSearchBusinesses)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 0)
     }
 
     func test__fetchImageData__success__willCallDelegate__storeData() {
@@ -213,9 +214,9 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.previousURLStrings[2], "http://www.image2.com")
         XCTAssertEqual(mockDelegate.fetchedImageRows[2], 2)
         XCTAssertEqual(mockDelegate.imageData[2], "third".data(using: .utf8))
-        XCTAssertEqual(subject.imageData[0], "first".data(using: .utf8))
-        XCTAssertEqual(subject.imageData[1], "second".data(using: .utf8))
-        XCTAssertEqual(subject.imageData[2], "third".data(using: .utf8))
+        XCTAssertEqual(subject.imageCache[0], "first".data(using: .utf8))
+        XCTAssertEqual(subject.imageCache[1], "second".data(using: .utf8))
+        XCTAssertEqual(subject.imageCache[2], "third".data(using: .utf8))
     }
 
     func test__fetchImageData__failure__willCallDelegateWithError() {

@@ -8,9 +8,9 @@ import Foundation
 @testable import WeedmapsChallenge
 
 class MockMainQueue: MainQueue {
-    var didAsync = false
+    var numberOfAsyncCalls = 0
 
     func async(_ work: @escaping @convention(block) () -> ()) {
-        didAsync = true
+        numberOfAsyncCalls += 1
     }
 }

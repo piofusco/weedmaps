@@ -7,12 +7,11 @@ import Foundation
 
 @testable import WeedmapsChallenge
 
-class MockSearchViewModelDelegate: SearchViewModelDelegate {
-    var didCallSearchBusinesses = false
+class MockSearchViewModelDelegate: HomeViewModelDelegate {
+    var numberOfSearches = 0
 
-
-    func didUpdateBusinesses() {
-        didCallSearchBusinesses = true
+    func didSearch() {
+        numberOfSearches += 1
     }
 
     var searchDidFail = false

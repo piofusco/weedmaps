@@ -8,7 +8,7 @@ import Foundation
 @testable import WeedmapsChallenge
 
 class MockHomeViewModel: HomeViewModel {
-    var delegate: SearchViewModelDelegate?
+    var delegate: HomeViewModelDelegate?
 
     var nextBusinesses: [Business]?
     var businesses: [Business] {
@@ -18,16 +18,22 @@ class MockHomeViewModel: HomeViewModel {
     }
 
     var nextImageData: [Data?]?
-    var imageData: [Data?] {
+    var imageCache: [Data?] {
         get {
             nextImageData!
         }
     }
 
     func search(term: String) {
+        delegate?.didSearch()
     }
 
+    var didLoadNextPage = false
+
     func loadNextPageOfBusinesses() {
+        didLoadNextPage = true
+
+        delegate?.didSearch()
     }
 
     var imageURLStrings = [String]()
@@ -36,5 +42,7 @@ class MockHomeViewModel: HomeViewModel {
     func fetchImageData(index: Int, urlString: String) {
         imageIndices.append(index)
         imageURLStrings.append(urlString)
+
+        delegate?.didFetchImage(for: index, data: "".data(using: .utf8)!)
     }
 }

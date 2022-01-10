@@ -22,7 +22,8 @@ class HomeViewController: UIViewController {
         return collectionView
     }()
 
-    private var searchController = UISearchController(searchResultsController: nil)
+
+    private var oldTotal = 0
 
     private let viewModel: HomeViewModel
     private let mainQueue: MainQueue
@@ -49,7 +50,15 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        viewModel.search(term: "banana")
+        let searchResultsController = SearchResultsController()
+        let searchController = UISearchController(searchResultsController: searchResultsController)
+        searchController.searchResultsUpdater = searchResultsController
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search business names"
+
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
 }
 
@@ -65,7 +74,7 @@ extension HomeViewController: UICollectionViewDataSource {
 
         cell.setupLabels(name: viewModel.businesses[indexPath.row].name)
 
-        if let imageData = viewModel.imageData[indexPath.row] {
+        if let imageData = viewModel.imageCache[indexPath.row] {
             cell.updateImage(data: imageData)
         } else {
             viewModel.fetchImageData(index: indexPath.row, urlString: viewModel.businesses[indexPath.row].imageURL)
@@ -73,14 +82,28 @@ extension HomeViewController: UICollectionViewDataSource {
 
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard !collectionView.visibleCells.contains(cell) && indexPath.row == viewModel.businesses.count - 5 else {
+            return
+        }
+
+        oldTotal = viewModel.businesses.count
+        viewModel.loadNextPageOfBusinesses()
+    }
 }
 
-extension HomeViewController: SearchViewModelDelegate {
-    func didUpdateBusinesses() {
-        DispatchQueue.main.async { [weak self] in
+extension HomeViewController: HomeViewModelDelegate {
+    func didSearch() {
+        mainQueue.async { [weak self] in
             guard let self = self else { return }
 
-            self.collectionView.reloadData()
+            var newIndexPaths = [IndexPath]()
+            for i in self.oldTotal..<self.viewModel.businesses.count {
+                newIndexPaths.append(IndexPath(row: i, section: 0))
+            }
+
+            self.collectionView.insertItems(at: newIndexPaths)
         }
     }
 
@@ -119,12 +142,9 @@ extension HomeViewController: UICollectionViewDelegate {
         present(alert, animated: true)
     }
 }
-extension HomeViewController: UISearchResultsUpdating {
 
-    func updateSearchResults(for searchController: UISearchController) {
-        // IMPLEMENT: Be sure to consider things like network errors
-        // and possible rate limiting from the Yelp API. If the user types
-        // very quickly, how will you prevent unnecessary requests from firing
-        // off? Be sure to leverage the searchDataTask and use it wisely!
+extension HomeViewController: UISearchBarDelegate {
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("searchBarTextDidBeginEditing")
     }
 }
