@@ -79,10 +79,21 @@ extension HomeViewController: SearchViewModelDelegate {
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // IMPLEMENT:
-        // 1a) Present the user with a UIAlertController (action sheet style) with options
-        // to either display the Business's Yelp page in a WKWebView OR bump the user out to
-        // Safari. Both options should display the Business's Yelp page details
+        guard indexPath.row >= 0 && indexPath.row < viewModel.businesses.count else { return }
+        guard let url = URL(string: viewModel.businesses[indexPath.row].url) else { return }
+
+        let alert = UIAlertController(title: "Go to business website", message: "", preferredStyle: .actionSheet)
+        let safari = UIAlertAction(title: "Open in Safari", style: .default) { _ in UIApplication.shared.open(url) }
+        let webView = UIAlertAction(title: "Open within app", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+
+            let detailViewController = HomeDetailViewController(url: url)
+            self.navigationController?.pushViewController(detailViewController, animated: true)
+        }
+        alert.addAction(safari)
+        alert.addAction(webView)
+
+        present(alert, animated: true)
     }
 }
 extension HomeViewController: UISearchResultsUpdating {

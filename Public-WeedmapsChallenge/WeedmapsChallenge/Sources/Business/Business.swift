@@ -12,7 +12,7 @@ struct Business: Decodable {
     let id: String
     let name: String
     let url: String
-    let price: String
+    let price: String?
     let imageURL: String
 
     enum CodingKeys: String, CodingKey {

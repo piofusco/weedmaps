@@ -14,8 +14,8 @@ class HomeViewModelTests: XCTestCase {
             .success(
                     PageResponse(
                             businesses: [
-                                Business(id: "some id 1", name: "some name 1"),
-                                Business(id: "some id 2", name: "some name 2"),
+                                Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1"),
+                                Business(id: "some id 2", name: "some name 2", url: "some url 2", price: "some price 2", imageURL: "some image url 2")
                             ]
                     )
             )
@@ -47,15 +47,15 @@ class HomeViewModelTests: XCTestCase {
             .success(
                     PageResponse(
                             businesses: [
-                                Business(id: "some id 1", name: "some name 1"),
-                                Business(id: "some id 2", name: "some name 2"),
+                                Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1"),
+                                Business(id: "some id 2", name: "some name 2", url: "some url 2", price: "some price 2", imageURL: "some image url 2")
                             ]
                     )
             ),
             .success(
                     PageResponse(
                             businesses: [
-                                Business(id: "some id 1", name: "some name 1")
+                                Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1")
                             ]
                     )
             )
@@ -92,17 +92,17 @@ class HomeViewModelTests: XCTestCase {
             .success(
                     PageResponse(
                             businesses: [
-                                Business(id: "some id 1", name: "some name 1"),
-                                Business(id: "some id 2", name: "some name 2"),
+                                Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1"),
+                                Business(id: "some id 2", name: "some name 2", url: "some url 2", price: "some price 2", imageURL: "some image url 2")
                             ]
                     )
             ),
             .success(
                     PageResponse(
                             businesses: [
-                                Business(id: "some id 3", name: "some name 3"),
-                                Business(id: "some id 4", name: "some name 4"),
-                                Business(id: "some id 5", name: "some name 5"),
+                                Business(id: "some id 3", name: "some name 3", url: "some url 3", price: "some price 3", imageURL: "some image url 3"),
+                                Business(id: "some id 4", name: "some name 4", url: "some url 4", price: "some price 4", imageURL: "some image url 4"),
+                                Business(id: "some id 5", name: "some name 5", url: "some url 5", price: "some price 5", imageURL: "some image url 5")
                             ]
                     )
             )
@@ -136,7 +136,9 @@ class HomeViewModelTests: XCTestCase {
 
     func test__loadNextPageOfBusinesses__lastTermIsNil__doNothing() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextResults = [.success(PageResponse(businesses: [Business(id: "some id 1", name: "some name 1")]))]
+        mockAPI.nextResults = [.success(PageResponse(businesses: [
+            Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1")
+        ]))]
         let mockDelegate = MockSearchViewModelDelegate()
         let subject = SearchViewModel(api: mockAPI)
         subject.delegate = mockDelegate
