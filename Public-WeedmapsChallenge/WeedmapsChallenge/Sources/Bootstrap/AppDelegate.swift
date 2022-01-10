@@ -25,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         locationManager.requestWhenInUseAuthorization()
         locationManager.startMonitoringSignificantLocationChanges() // need to eventually stop tracking this
 
-        let homeViewController = HomeViewController()
+        let homeViewController = HomeViewController(viewModel: searchViewModel)
+        searchViewModel.delegate = homeViewController
         let navigationController = UINavigationController(rootViewController: homeViewController)
         let window = UIWindow()
         window.rootViewController = navigationController
