@@ -16,15 +16,17 @@ protocol SearchViewModelDelegate: AnyObject {
 
 protocol HomeViewModel: AnyObject {
     var businesses: [Business] { get }
+    var imageData: [Data?] { get }
     var delegate: SearchViewModelDelegate? { get set }
 
     func search(term: String)
     func loadNextPageOfBusinesses()
-    func getImageData(index: Int, urlString: String)
+    func fetchImageData(index: Int, urlString: String)
 }
 
 class SearchViewModel: NSObject, HomeViewModel {
     private(set) var businesses: [Business] = []
+    private(set) var imageData: [Data?] = []
     private var location: CLLocation?
     private var lastSearchedTerm: String?
 
@@ -38,8 +40,9 @@ class SearchViewModel: NSObject, HomeViewModel {
 
     func search(term: String) {
         guard let location = location else { return }
-
         lastSearchedTerm = term
+
+        // Should we wipe old businesses/images here?
 
         search(term: term, location: location, overwrite: true)
     }
@@ -59,8 +62,10 @@ class SearchViewModel: NSObject, HomeViewModel {
             case .success(let response):
                 if !overwrite {
                     self.businesses.append(contentsOf: response.businesses)
+                    self.imageData.append(contentsOf: [Data?](repeating: nil, count: response.businesses.count))
                 } else {
                     self.businesses = response.businesses
+                    self.imageData = [Data?](repeating: nil, count: self.businesses.count)
                 }
                 self.delegate?.didUpdateBusinesses()
             case .failure(let error):
@@ -69,30 +74,22 @@ class SearchViewModel: NSObject, HomeViewModel {
         }
     }
 
-    func getImageData(index: Int, urlString: String) {
+    func fetchImageData(index: Int, urlString: String) {
         api.fetchImageData(urlString: urlString) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
-            case .success(let data): self.delegate?.didFetchImage(for: index, data: data)
-            case .failure(let error): self.delegate?.imageFetchFailed(for: index, with: error)
+            case .success(let data):
+                self.delegate?.didFetchImage(for: index, data: data)
+                self.imageData[index] = data
+            case .failure(let error):
+                self.delegate?.imageFetchFailed(for: index, with: error)
             }
         }
     }
 }
 
 extension SearchViewModel: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways: print("status is now authorizedAlways")
-        case .authorizedWhenInUse: print("status is now authorizedWhenInUse")
-        case .denied: print("status is now denied")
-        case .notDetermined: print("status is now notDetermined")
-        case .restricted: print("status is now restricted")
-        @unknown default: print("status is now unknown")
-        }
-    }
-
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             let latitude = location.coordinate.latitude
@@ -100,6 +97,4 @@ extension SearchViewModel: CLLocationManagerDelegate {
             self.location = CLLocation(latitude: latitude, longitude: longitude)
         }
     }
-
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {}
 }
