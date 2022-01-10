@@ -76,7 +76,7 @@ class YelpAPITest: XCTestCase {
         mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
         mockURLSession.nextDataTask = MockURLSessionDataTask()
         let mockJSONDecoder = MockJSONDecoder<Business>()
-        mockJSONDecoder.nextDecodable = Business(id: "", name: "")
+        mockJSONDecoder.nextDecodable = Business(id: "", name: "", url: "", price: "", imageURL: "")
         let subject = YelpAPI(urlSession: mockURLSession, decoder: mockJSONDecoder)
         var completionDidRun = false
 
@@ -145,6 +145,122 @@ class YelpAPITest: XCTestCase {
         }
 
         XCTAssertTrue(completionDidRun)
+    }
+
+    func test__fetchImageData__callResume__ensureURL() {
+        let mockURLSession = MockURLSession()
+        let mockURLSessionDataTask = MockURLSessionDataTask()
+        mockURLSession.nextDataTask = mockURLSessionDataTask
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+
+        subject.fetchImageData(urlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg") { _ in }
+
+        XCTAssertTrue(mockURLSessionDataTask.didResume)
+        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg"))
+    }
+
+    func test__fetchImageData__200__callCompletionWithData() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
+        mockURLSession.nextData = "some image data lol".data(using: .utf8)
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.fetchImageData(urlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg") { result in
+            switch result {
+            case .success(let data): completionDidRun = true
+            case .failure(_): XCTFail("should not succeed")
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__fetchImageData__200__noData__callCompletionWithError() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.fetchImageData(urlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg") { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't succeed")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__fetchImageData__error__callCompletionWithError() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextError = NSError(domain: "doesn't matter", code: 666)
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.fetchImageData(urlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg") { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(_): completionDidRun = true
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__fetchImageData__400__callCompletionWithFailure() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.BadRequestError]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.fetchImageData(urlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg") { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__fetchImageData__500__callCompletionWithFailure() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.InternalServerError]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.fetchImageData(urlString: "https://rickandmortyapi.com/api/character/avatar/1.jpeg") { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__fetchImageData__invalidURL__doNothing() {
+        let subject = YelpAPI(urlSession: MockURLSession(), decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.fetchImageData(urlString: "not a url lol") { result in
+            completionDidRun = true
+            XCTFail("shouldn't call completion")
+        }
+
+        XCTAssertFalse(completionDidRun)
     }
 }
 

@@ -26,4 +26,8 @@ class MockYellowPagesAPI: YellowPagesAPI {
             completion(nextResults.removeFirst())
         }
     }
+
+    func fetchImageData(urlString: String, completion: @escaping (Result<Data, Error>) -> ()) {
+
+    }
 }
