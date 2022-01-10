@@ -18,6 +18,8 @@ class YelpAPI: YellowPagesAPI {
         return urlComponents
     }()
 
+    fileprivate let apiKey = "EVgb3CNoYvRGgR2Elu6gpThMZMWJBrJP-XPNGSzM9-uO-mm316e3XxWqPXiHkB9KxW_B4WEQe4Jw82A44KGuBri6Wk_kgM1UioFgLimIY_Z2jUnqjfhqwEx6JyvbYXYx"
+
     private let urlSession: WeedmapsURLSession
     private let decoder: WeedmapsJSONDecoder
 
@@ -42,7 +44,10 @@ class YelpAPI: YellowPagesAPI {
             return
         }
 
-        urlSession.makeDataTask(with: URLRequest(url: url)) { [weak self] data, response, error in
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+
+        urlSession.makeDataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
 
             if let error = error { completion(Result.failure(error)) }

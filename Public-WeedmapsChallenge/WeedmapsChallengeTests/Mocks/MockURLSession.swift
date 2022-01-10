@@ -9,6 +9,7 @@ import Foundation
 
 class MockURLSession: WeedmapsURLSession {
     var lastURL: URL?
+    var lastHeaders: [String : String]?
 
     var nextData: Data?
     var nextResponses: [HTTPURLResponse] = []
@@ -18,6 +19,7 @@ class MockURLSession: WeedmapsURLSession {
 
     func makeDataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> ()) -> WeedmapsURLSessionDataTask {
         lastURL = request.url
+        lastHeaders = request.allHTTPHeaderFields
 
         var nextResponse: HTTPURLResponse?
         if nextResponses.count > 0 {
