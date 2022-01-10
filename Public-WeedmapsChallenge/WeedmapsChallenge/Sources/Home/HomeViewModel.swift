@@ -6,14 +6,6 @@
 import Foundation
 import CoreLocation
 
-protocol HomeViewModelDelegate: AnyObject {
-    func didSearch()
-    func searchFailed(with error: Error)
-
-    func didFetchImage(for row: Int, data: Data)
-    func imageFetchFailed(for row: Int, with error: Error)
-}
-
 protocol HomeViewModel: AnyObject {
     var businesses: [Business] { get }
     var imageCache: [Data?] { get }

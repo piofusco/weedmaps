@@ -4,6 +4,14 @@
 
 import UIKit
 
+protocol HomeViewModelDelegate: AnyObject {
+    func didSearch()
+    func searchFailed(with error: Error)
+
+    func didFetchImage(for row: Int, data: Data)
+    func imageFetchFailed(for row: Int, with error: Error)
+}
+
 class HomeViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let padding = 15.0
