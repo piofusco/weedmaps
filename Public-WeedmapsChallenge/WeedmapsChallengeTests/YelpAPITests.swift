@@ -272,7 +272,7 @@ class YelpAPITest: XCTestCase {
         subject.autocomplete(term: "banana", location: expectedLocation) { _ in }
 
         XCTAssertTrue(mockURLSessionDataTask.didResume)
-        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/autocomplete?term=banana&latitude=37.78&longitude=-122.39"))
+        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/autocomplete?text=banana&latitude=37.78&longitude=-122.39"))
         guard let lastHeaders = mockURLSession.lastHeaders else {
             XCTFail("No headers set")
             return
@@ -291,21 +291,19 @@ class YelpAPITest: XCTestCase {
         mockURLSession.nextDataTask = MockURLSessionDataTask()
         let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
         var completionDidRun = false
-        var returnedAutoCompleteResponse: AutoCompleteResponse?
+        var autoCompleteResponses: [String]?
 
         subject.autocomplete(term: "banana", location: expectedLocation) { result in
             completionDidRun = true
 
             switch result {
-            case .success(let response): returnedAutoCompleteResponse = response
+            case .success(let response): autoCompleteResponses = response
             case .failure(_): XCTFail("result shouldn't be a failure")
             }
         }
 
         XCTAssertTrue(completionDidRun)
-        XCTAssertEqual(returnedAutoCompleteResponse?.categories.count, 2)
-        XCTAssertEqual(returnedAutoCompleteResponse?.businesses.count, 2)
-        XCTAssertEqual(returnedAutoCompleteResponse?.terms.count, 2)
+        XCTAssertEqual(autoCompleteResponses?.count, 6)
     }
 
     func test__autocomplete__200__noData__runCompletionWithFailure() {

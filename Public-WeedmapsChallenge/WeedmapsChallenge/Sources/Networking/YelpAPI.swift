@@ -10,7 +10,7 @@ protocol YellowPagesAPI {
     func search(term: String, location: CLLocation, offset: Int, completion: @escaping (Result<PageResponse, Error>) -> ())
     func fetchImageData(urlString: String, completion: @escaping (Result<Data, Error>) -> Void)
 
-    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<AutoCompleteResponse, Error>) -> ())
+    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<[String], Error>) -> ())
 }
 
 class YelpAPI: YellowPagesAPI {
@@ -113,10 +113,10 @@ class YelpAPI: YellowPagesAPI {
         }.resume()
     }
 
-    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<AutoCompleteResponse, Error>) -> ()) {
+    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<[String], Error>) -> ()) {
         var urlComponents = baseURLComponents
         urlComponents.queryItems = [
-            URLQueryItem(name: "term", value: term),
+            URLQueryItem(name: "text", value: term),
             URLQueryItem(name: "latitude", value: "\(location.coordinate.latitude)"),
             URLQueryItem(name: "longitude", value: "\(location.coordinate.longitude)"),
         ]
@@ -159,7 +159,12 @@ class YelpAPI: YellowPagesAPI {
                     return
                 }
 
-                completion(Result.success(responseToReturn))
+                var autoCompleteStrings = [String]()
+                for category in responseToReturn.categories { autoCompleteStrings.append(category.title) }
+                for business in responseToReturn.businesses { autoCompleteStrings.append(business.name) }
+                for term in responseToReturn.terms { autoCompleteStrings.append(term.text) }
+
+                completion(Result.success(autoCompleteStrings))
             case 400..<499: completion(Result.failure(YelpError.badRequest))
             case 500..<599: completion(Result.failure(YelpError.internalServerError))
             default: completion(Result.failure(YelpError.unexpected(code: -1)))
