@@ -9,7 +9,7 @@ import CoreLocation
 protocol HomeViewModel: AnyObject {
     var businesses: [Business] { get }
     var imageCache: [Data?] { get }
-    var autoCompleteResponse: AutoCompleteResponse? { get }
+    var autoCompleteStrings: [String] { get }
     var delegate: HomeViewModelDelegate? { get set }
 
     func search(term: String)
@@ -21,7 +21,7 @@ protocol HomeViewModel: AnyObject {
 class SearchViewModel: NSObject, HomeViewModel {
     private(set) var businesses: [Business] = []
     private(set) var imageCache: [Data?] = []
-    private(set) var autoCompleteResponse: AutoCompleteResponse?
+    private(set) var autoCompleteStrings = [String]()
     private var location: CLLocation?
     private var lastSearchedTerm: String?
     private var lastAutoCompleteTerm: String?
@@ -93,9 +93,10 @@ class SearchViewModel: NSObject, HomeViewModel {
 
             switch result {
             case .success(let response):
-                self.autoCompleteResponse = response
+                self.autoCompleteStrings = response
                 self.delegate?.didAutoComplete()
             case .failure(let error):
+                print(error)
                 self.delegate?.autoCompleteDidFail(with: error)
             }
         }

@@ -40,9 +40,9 @@ class MockYellowPagesAPI: YellowPagesAPI {
 
     var lastAutoCompleteTerm: String?
     var lastAutoCompleteLocation: CLLocation?
-    var nextAutoCompleteResult: Result<AutoCompleteResponse, Error>?
+    var nextAutoCompleteResult: Result<[String], Error>?
 
-    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<AutoCompleteResponse, Error>) -> ()) {
+    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<[String], Error>) -> ()) {
         lastAutoCompleteTerm = term
         lastAutoCompleteLocation = location
 

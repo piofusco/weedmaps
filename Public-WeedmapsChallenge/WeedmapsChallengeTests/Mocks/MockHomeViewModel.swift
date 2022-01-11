@@ -24,7 +24,11 @@ class MockHomeViewModel: HomeViewModel {
         }
     }
 
+    var lastSearchedTerm: String?
+
     func search(term: String) {
+        lastSearchedTerm = term
+
         delegate?.didSearch()
     }
 
@@ -46,16 +50,16 @@ class MockHomeViewModel: HomeViewModel {
         delegate?.didFetchImage(for: index, data: "".data(using: .utf8)!)
     }
 
-    var nextAutoCompleteResponse: AutoCompleteResponse?
-    var autoCompleteResponse: AutoCompleteResponse? {
+    var nextAutoCompleteResponse: [String]?
+    var autoCompleteStrings: [String] {
         get {
             nextAutoCompleteResponse!
         }
     }
 
+    var lastAutoCompleteTerm: String?
+
     func autoComplete(term: String) {
-
+        lastAutoCompleteTerm = term
     }
-
-
 }

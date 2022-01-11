@@ -239,7 +239,7 @@ class HomeViewModelTests: XCTestCase {
 
     func test__autoComplete__withLocation__success__callDelegate() {
         let mockAPI = MockYellowPagesAPI()
-        mockAPI.nextAutoCompleteResult = .success(AutoCompleteResponse(categories: [], businesses: [], terms: []))
+        mockAPI.nextAutoCompleteResult = .success([String]())
         let mockDelegate = MockSearchViewModelDelegate()
         let subject = SearchViewModel(api: mockAPI)
         subject.delegate = mockDelegate
@@ -250,9 +250,7 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastAutoCompleteTerm, "some term")
         XCTAssertEqual(mockAPI.lastAutoCompleteLocation?.coordinate.latitude, CLLocationDegrees(37.78))
         XCTAssertEqual(mockAPI.lastAutoCompleteLocation?.coordinate.longitude, CLLocationDegrees(-122.39))
-        XCTAssertEqual(subject.autoCompleteResponse?.categories.count, 0)
-        XCTAssertEqual(subject.autoCompleteResponse?.businesses.count, 0)
-        XCTAssertEqual(subject.autoCompleteResponse?.terms.count, 0)
+        XCTAssertEqual(subject.autoCompleteStrings.count, 0)
         XCTAssertTrue(mockDelegate.didCallAutoComplete)
     }
 
@@ -284,7 +282,7 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertFalse(mockDelegate.didCallAutoComplete)
         XCTAssertTrue(mockDelegate.didCallAutoCompleteDidFail)
         XCTAssertEqual(mockDelegate.autoCompleteErrors[0], YelpError.unexpected(code: -1))
-        XCTAssertNil(subject.autoCompleteResponse)
+        XCTAssertEqual(subject.autoCompleteStrings.count, 0)
     }
 }
 

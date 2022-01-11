@@ -79,6 +79,24 @@ class HomeViewControllerTests: XCTestCase {
 
         XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
     }
+
+    func test__AutoCompleteDelegate__searchBarDidUpdate__willCallAutoCompleteOnViewModel() {
+        let mockHomeViewModel = MockHomeViewModel()
+        let subject = HomeViewController(viewModel: mockHomeViewModel, mainQueue: MockMainQueue())
+
+        subject.searchBarDidUpdate(term: "some term")
+
+        XCTAssertEqual(mockHomeViewModel.lastAutoCompleteTerm, "some term")
+    }
+
+    func test__AutoCompleteDelegate__didSelectTerm__willCallSearcheOnViewModel() {
+        let mockHomeViewModel = MockHomeViewModel()
+        let subject = HomeViewController(viewModel: mockHomeViewModel, mainQueue: MockMainQueue())
+
+        subject.didSelectTerm(term: "some term")
+
+        XCTAssertEqual(mockHomeViewModel.lastSearchedTerm, "some term")
+    }
 }
 
 fileprivate var stubCollectionView: UICollectionView = {

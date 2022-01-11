@@ -32,6 +32,14 @@ class HomeViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var autoCompleteTableViewController: AutoCompleteTableViewController = {
+        let autoCompleteTableViewController = AutoCompleteTableViewController()
+        autoCompleteTableViewController.delegate = self
+        return autoCompleteTableViewController
+    }()
+
+    private var searchController: UISearchController?
+
     private var oldTotal = 0
 
     private let viewModel: HomeViewModel
@@ -59,12 +67,10 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let searchResultsController = SearchResultsController()
-        let searchController = UISearchController(searchResultsController: searchResultsController)
-        searchController.searchResultsUpdater = searchResultsController
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Search business names"
+        searchController = UISearchController(searchResultsController: autoCompleteTableViewController)
+        searchController?.searchResultsUpdater = autoCompleteTableViewController
+        searchController?.obscuresBackgroundDuringPresentation = false
+        searchController?.searchBar.placeholder = "Search business names"
 
         navigationItem.searchController = searchController
         definesPresentationContext = true
@@ -117,7 +123,6 @@ extension HomeViewController: HomeViewModelDelegate {
     }
 
     func searchDidFail(with error: Error) {
-
     }
 
     func didFetchImage(for row: Int, data: Data) {
@@ -132,7 +137,12 @@ extension HomeViewController: HomeViewModelDelegate {
     }
 
     func didAutoComplete() {
+        mainQueue.async { [weak self] in
+            guard let self = self else { return }
 
+            self.autoCompleteTableViewController.autoCompleteStrings = self.viewModel.autoCompleteStrings
+            self.autoCompleteTableViewController.tableView.reloadData()
+        }
     }
 
     func autoCompleteDidFail(with error: Error) {
@@ -156,5 +166,17 @@ extension HomeViewController: UICollectionViewDelegate {
         alert.addAction(webView)
 
         present(alert, animated: true)
+    }
+}
+
+extension HomeViewController: AutoCompleteDelegate {
+    func searchBarDidUpdate(term: String) {
+        viewModel.autoComplete(term: term)
+    }
+
+    func didSelectTerm(term: String) {
+        searchController?.isActive = false
+
+        viewModel.search(term: term)
     }
 }
