@@ -89,22 +89,68 @@ class HomeViewControllerTests: XCTestCase {
         XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
     }
 
-    func test__AutoCompleteDelegate__searchBarDidUpdate__willCallAutoCompleteOnViewModel() {
-        let mockHomeViewModel = MockHomeViewModel()
-        let subject = HomeViewController(viewModel: mockHomeViewModel, mainQueue: MockMainQueue())
-
-        subject.searchBarDidUpdate(term: "some term")
-
-        XCTAssertEqual(mockHomeViewModel.lastAutoCompleteTerm, "some term")
-    }
-
-    func test__AutoCompleteDelegate__didSelectTerm__willCallSearcheOnViewModel() {
+    func test__AutoCompleteDelegate__didSelectTerm__willCallSearchOnViewModel() {
         let mockHomeViewModel = MockHomeViewModel()
         let subject = HomeViewController(viewModel: mockHomeViewModel, mainQueue: MockMainQueue())
 
         subject.didSelectTerm(term: "some term")
 
         XCTAssertEqual(mockHomeViewModel.lastSearchedTerm, "some term")
+    }
+
+    func test__UISearchResultsUpdating__updateSearchResults__willCallAutoComplete() {
+        let mockViewModel = MockHomeViewModel()
+        let subject = HomeViewController(viewModel: mockViewModel, mainQueue: MockMainQueue())
+        let stubSearchController = UISearchController()
+        stubSearchController.searchBar.text = "this text?"
+
+        subject.updateSearchResults(for: stubSearchController)
+
+        XCTAssertEqual(mockViewModel.lastAutoCompleteTerm, "this text?")
+    }
+
+    func test__UISearchBarDelegate__searchBarSearchButtonClicked__willCallSearch() {
+        let mockViewModel = MockHomeViewModel()
+        let subject = HomeViewController(viewModel: mockViewModel, mainQueue: MockMainQueue())
+        let stubSearchBar = UISearchBar()
+        stubSearchBar.text = "this text?"
+
+        subject.searchBarSearchButtonClicked(stubSearchBar)
+
+        XCTAssertEqual(mockViewModel.lastSearchedTerm, "this text?")
+    }
+
+    func test__UISearchBarDelegate__searchBarSearchButtonClicked___noText__doNothing() {
+        let mockViewModel = MockHomeViewModel()
+        let subject = HomeViewController(viewModel: mockViewModel, mainQueue: MockMainQueue())
+        let stubSearchBar = UISearchBar()
+        stubSearchBar.text = ""
+
+        subject.searchBarSearchButtonClicked(stubSearchBar)
+
+        XCTAssertNil(mockViewModel.lastSearchedTerm)
+    }
+
+    func test__UISearchBarDelegate__searchBarTextDidBeginEditing__noText__willAsync() {
+        let mockMainQueue = MockMainQueue()
+        let subject = HomeViewController(viewModel: MockHomeViewModel(), mainQueue: mockMainQueue)
+        let stubSearchBar = UISearchBar()
+        stubSearchBar.text = ""
+
+        subject.searchBarTextDidBeginEditing(stubSearchBar)
+
+        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
+    }
+
+    func test__UISearchBarDelegate__textDidChange__noText__willAsync() {
+        let mockMainQueue = MockMainQueue()
+        let subject = HomeViewController(viewModel: MockHomeViewModel(), mainQueue: mockMainQueue)
+        let stubSearchBar = UISearchBar()
+        stubSearchBar.text = ""
+
+        subject.searchBar(stubSearchBar, textDidChange: "")
+
+        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
     }
 }
 

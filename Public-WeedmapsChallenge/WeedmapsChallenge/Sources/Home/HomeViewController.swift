@@ -68,10 +68,10 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         searchController = UISearchController(searchResultsController: autoCompleteTableViewController)
-        searchController?.searchResultsUpdater = autoCompleteTableViewController
-        searchController?.searchBar.delegate = autoCompleteTableViewController
-        searchController?.obscuresBackgroundDuringPresentation = false
+        searchController?.searchResultsUpdater = self
+        searchController?.searchBar.delegate = self
         searchController?.searchBar.placeholder = "Search business names"
+        searchController?.obscuresBackgroundDuringPresentation = false
 
         navigationItem.searchController = searchController
         definesPresentationContext = true
@@ -170,14 +170,69 @@ extension HomeViewController: UICollectionViewDelegate {
     }
 }
 
-extension HomeViewController: AutoCompleteDelegate {
-    func searchBarDidUpdate(term: String) {
+extension HomeViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let term = searchController.searchBar.text, !term.isEmpty else { return }
+
         viewModel.autoComplete(term: term)
     }
+}
 
+extension HomeViewController: AutoCompleteDelegate {
     func didSelectTerm(term: String) {
-        searchController?.isActive = false
+        guard !term.isEmpty else { return }
 
+        searchController?.showsSearchResultsController = false
+        searchController?.searchBar.text = term
+        searchController?.searchBar.searchTextField.resignFirstResponder()
+        searchController?.searchBar.showsCancelButton = false
+        oldTotal = 0
         viewModel.search(term: term)
+    }
+}
+
+extension HomeViewController: UISearchBarDelegate {
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let term = searchBar.text, !term.isEmpty else { return }
+
+        autoCompleteTableViewController.displayPreviousSearches = false
+        searchController?.showsSearchResultsController = false
+        searchController?.searchBar.text = term
+        searchController?.searchBar.searchTextField.resignFirstResponder()
+        searchController?.searchBar.showsCancelButton = false
+        oldTotal = 0
+        viewModel.search(term: term)
+    }
+
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text, text.isEmpty else {
+            autoCompleteTableViewController.displayPreviousSearches = false
+            return
+        }
+
+        searchController?.showsSearchResultsController = true
+        mainQueue.async { [weak self] in
+            guard let self = self else { return }
+
+            self.autoCompleteTableViewController.displayPreviousSearches = true
+            self.autoCompleteTableViewController.previousSearches = self.viewModel.previousSearches
+            self.autoCompleteTableViewController.tableView.reloadData()
+        }
+    }
+
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard let text = searchBar.text, text.isEmpty else {
+            autoCompleteTableViewController.displayPreviousSearches = false
+            return
+        }
+
+        searchController?.showsSearchResultsController = true
+        mainQueue.async { [weak self] in
+            guard let self = self else { return }
+
+            self.autoCompleteTableViewController.displayPreviousSearches = true
+            self.autoCompleteTableViewController.previousSearches = self.viewModel.previousSearches
+            self.autoCompleteTableViewController.tableView.reloadData()
+        }
     }
 }
