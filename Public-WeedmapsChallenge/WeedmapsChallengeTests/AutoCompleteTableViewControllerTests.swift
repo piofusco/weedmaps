@@ -7,38 +7,31 @@ import XCTest
 @testable import WeedmapsChallenge
 
 class AutoCompleteTableViewControllerTests: XCTestCase {
-    func test__didSelectRowAt__willCallDelegate() {
+    func test__displayPreviousSearches__tableViewDataSourceIsPreviousSearches() {
         let mockAutoCompleteDelegate = MockAutoCompleteDelegate()
         let subject = AutoCompleteTableViewController()
         subject.delegate = mockAutoCompleteDelegate
-        subject.autoCompleteStrings = ["this one"]
+        subject.previousSearches = ["previous search 1", "previous search 2"]
+        subject.autoCompleteStrings = ["autocomplete 1"]
+        subject.displayPreviousSearches = true
 
         subject.tableView(UITableView(), didSelectRowAt: IndexPath(row: 0, section: 0))
 
-        XCTAssertEqual(mockAutoCompleteDelegate.lastSelectedTerm, "this one")
+        XCTAssertEqual(mockAutoCompleteDelegate.lastSelectedTerm, "previous search 1")
+        XCTAssertEqual(subject.tableView(UITableView(), numberOfRowsInSection: 0), 2)
     }
 
-    func test__UISearchResultsUpdating__updateSearchResults__willCallDelegate() {
+    func test__didSelectRowAt__tableViewDataSourceIsAutoComplete() {
         let mockAutoCompleteDelegate = MockAutoCompleteDelegate()
         let subject = AutoCompleteTableViewController()
         subject.delegate = mockAutoCompleteDelegate
-        let stubSearchController = UISearchController()
-        stubSearchController.searchBar.text = "this text?"
+        subject.previousSearches = ["previous search 1", "previous search 2"]
+        subject.autoCompleteStrings = ["autocomplete 1"]
+        subject.displayPreviousSearches = false
 
-        subject.updateSearchResults(for: stubSearchController)
+        subject.tableView(UITableView(), didSelectRowAt: IndexPath(row: 0, section: 0))
 
-        XCTAssertEqual(mockAutoCompleteDelegate.lastSearchedTerm, "this text?")
-    }
-
-    func test__UISearchBarDelegate__searchBarSearchButtonClicked__willCallDelegate() {
-        let mockAutoCompleteDelegate = MockAutoCompleteDelegate()
-        let subject = AutoCompleteTableViewController()
-        subject.delegate = mockAutoCompleteDelegate
-        let stubSearchBar = UISearchBar()
-        stubSearchBar.text = "this text?"
-
-        subject.searchBarSearchButtonClicked(stubSearchBar)
-
-        XCTAssertEqual(mockAutoCompleteDelegate.lastSelectedTerm, "this text?")
+        XCTAssertEqual(mockAutoCompleteDelegate.lastSelectedTerm, "autocomplete 1")
+        XCTAssertEqual(subject.tableView(UITableView(), numberOfRowsInSection: 0), 1)
     }
 }

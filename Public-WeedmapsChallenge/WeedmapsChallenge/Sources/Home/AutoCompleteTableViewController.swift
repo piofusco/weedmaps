@@ -7,13 +7,15 @@ import UIKit
 import Foundation
 
 protocol AutoCompleteDelegate: AnyObject {
-    func searchBarDidUpdate(term: String)
     func didSelectTerm(term: String)
 }
 
 class AutoCompleteTableViewController: UITableViewController {
-    weak var delegate: AutoCompleteDelegate?
     var autoCompleteStrings = [String]()
+    var previousSearches = [String]()
+    var displayPreviousSearches = true
+
+    weak var delegate: AutoCompleteDelegate?
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -24,32 +26,24 @@ class AutoCompleteTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        autoCompleteStrings.count
+        if displayPreviousSearches {
+            return previousSearches.count
+        } else {
+            return autoCompleteStrings.count
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "AutoCompleteCell")
-        cell.textLabel?.text = autoCompleteStrings[indexPath.row]
+        cell.textLabel?.text = displayPreviousSearches ? previousSearches[indexPath.row] : autoCompleteStrings[indexPath.row]
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectTerm(term: autoCompleteStrings[indexPath.row])
-    }
-}
-
-extension AutoCompleteTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let term = searchController.searchBar.text, !term.isEmpty else { return }
-
-        delegate?.searchBarDidUpdate(term: term)
-    }
-}
-
-extension AutoCompleteTableViewController: UISearchBarDelegate {
-    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let text = searchBar.text else { return }
-
-        delegate?.didSelectTerm(term: text)
+        if displayPreviousSearches {
+            delegate?.didSelectTerm(term: previousSearches[indexPath.row])
+        } else {
+            delegate?.didSelectTerm(term: autoCompleteStrings[indexPath.row])
+        }
     }
 }
