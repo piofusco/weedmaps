@@ -6,51 +6,59 @@
 import Foundation
 
 protocol SearchCache {
-    func write(_ previousSearches: [String])
+    func write(_ previousSearch: String)
     func readPreviousSearches() -> [String]
 }
 
 class WeedmapsSearchCache: SearchCache {
     private let fileManager: WeedmapsFileManager
-    private let decoder: WeedmapsJSONDecoder
-    private let encoder: WeedmapsJSONEncoder
 
-    init(fileManager: WeedmapsFileManager, decoder: WeedmapsJSONDecoder, encoder: WeedmapsJSONEncoder) {
+    init(fileManager: WeedmapsFileManager) {
         self.fileManager = fileManager
-        self.decoder = decoder
-        self.encoder = encoder
     }
 
-    func write(_ previousSearches: [String]) {
-        guard let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to retrieve documents URL")
-            return
-        }
-        let plistURL = documents.appendingPathComponent("searches.plist")
+    func write(_ newSearch: String) {
+        guard let pathToDocuments = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else { return }
+        let pathToPropertyList = pathToDocuments.appending("/searches.plist")
 
-        do {
-            let data = try encoder.encode(previousSearches)
-            try data.write(to: plistURL)
-        } catch {
-            print(error)
+        if !FileManager.default.fileExists(atPath: pathToPropertyList) {
+            if let bundle = Bundle.main.path(forResource: "searches", ofType: "plist") {
+                do {
+                    try FileManager.default.copyItem(atPath: bundle, toPath: pathToPropertyList)
+                } catch {
+                    print(error)
+                }
+            }
         }
+
+        guard let dictionary = NSMutableDictionary(contentsOfFile: pathToPropertyList) else { return }
+
+        if var previousSearches = dictionary["searches"] as? [String] {
+            previousSearches.append(newSearch)
+            dictionary["searches"] = previousSearches
+        } else {
+            dictionary["searches"] = [newSearch]
+        }
+
+        dictionary.write(toFile: pathToPropertyList, atomically: true)
     }
 
     func readPreviousSearches() -> [String] {
-        guard let documentsPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to retrieve documents URL")
-            return []
-        }
-        let plistURL = documentsPath.appendingPathComponent("searches.plist")
+        guard let pathToDocuments = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else { return [] }
+        let pathToPropertyList = pathToDocuments.appending("/searches.plist")
 
-        var searches = [String]()
-        do {
-            let data = try Data(contentsOf: plistURL)
-            searches = try decoder.decode([String].self, from: data)
-        } catch {
-            print(error)
+        if !FileManager.default.fileExists(atPath: pathToPropertyList) {
+            if let bundle = Bundle.main.path(forResource: "searches", ofType: "plist") {
+                do {
+                    try FileManager.default.copyItem(atPath: bundle, toPath: pathToPropertyList)
+                } catch {
+                    print(error)
+                }
+            }
         }
 
-        return searches
+        guard let dictionary = NSMutableDictionary(contentsOfFile: pathToPropertyList) else { return [] }
+        guard let previousSearches = dictionary["searches"] as? [String] else { return [] }
+        return previousSearches
     }
 }

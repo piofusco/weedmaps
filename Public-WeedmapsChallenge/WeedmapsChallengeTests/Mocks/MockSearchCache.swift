@@ -7,11 +7,11 @@
 
 class MockSearchCache: SearchCache {
     var didWrite = false
-    var lastWrite: [String]?
+    var lastWrite: String?
 
-    func write(_ previousSearches: [String]) {
+    func write(_ previousSearch: String) {
         didWrite = true
-        lastWrite = previousSearches
+        lastWrite = previousSearch
     }
 
     var didRead = false
