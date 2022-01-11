@@ -62,12 +62,12 @@ class HomeViewControllerTests: XCTestCase {
         subject.collectionView(stubCollectionView, willDisplay: firstCell, forItemAt: IndexPath(row: 0, section: 0))
 
         XCTAssertFalse(mockHomeViewModel.didLoadNextPage)
-        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
+        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 0)
 
         subject.collectionView(stubCollectionView, willDisplay: secondCell, forItemAt: IndexPath(row: 1, section: 0))
 
         XCTAssertTrue(mockHomeViewModel.didLoadNextPage)
-        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 2)
+        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
     }
 
     func test__SearchViewModelDelegate__didFetchImage__callsDispatchQueue() {

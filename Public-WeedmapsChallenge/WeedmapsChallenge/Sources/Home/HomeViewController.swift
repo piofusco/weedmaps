@@ -17,14 +17,13 @@ protocol HomeViewModelDelegate: AnyObject {
 
 class HomeViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
-        let padding = 15.0
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 15.0, bottom: 0, right: 15.0)
         layout.itemSize = CGSize(
-                width: (UIScreen.main.bounds.width / 2) - (padding * 2),
+                width: (UIScreen.main.bounds.width / 2) - (15.0 * 2),
                 height: UIScreen.main.bounds.width / 2
         )
-        layout.sectionInset = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
 
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(BusinessCollectionViewCell.self, forCellWithReuseIdentifier: "BusinessCollectionViewCell")
@@ -32,7 +31,6 @@ class HomeViewController: UIViewController {
         collectionView.delegate = self
         return collectionView
     }()
-
 
     private var oldTotal = 0
 
@@ -158,11 +156,5 @@ extension HomeViewController: UICollectionViewDelegate {
         alert.addAction(webView)
 
         present(alert, animated: true)
-    }
-}
-
-extension HomeViewController: UISearchBarDelegate {
-    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("searchBarTextDidBeginEditing")
     }
 }
