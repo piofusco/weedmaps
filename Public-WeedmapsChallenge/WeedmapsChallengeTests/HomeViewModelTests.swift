@@ -8,14 +8,16 @@ import XCTest
 @testable import WeedmapsChallenge
 
 class HomeViewModelTests: XCTestCase {
-    func test__init__willRestorePreviousSearchesFromCache() {
+    func test__getPreviousSearches__willRestorePreviousSearchesFromCache() {
         let mockAPI = MockYellowPagesAPI()
         let mockSearchCache = MockSearchCache()
         mockSearchCache.nextPreviousSearches = ["search 1", "search 2"]
         let subject = SearchViewModel(api: mockAPI, searchCache: mockSearchCache)
 
+        let previousSearches = subject.previousSearches
+
+        XCTAssertEqual(previousSearches, ["search 1", "search 2"])
         XCTAssertTrue(mockSearchCache.didRead)
-        XCTAssertEqual(subject.previousSearches, ["search 1", "search 2"])
     }
 
     func test__search__withLocation__success__willCallDelegate__updateImageData__updateSearchCache() {
@@ -31,7 +33,8 @@ class HomeViewModelTests: XCTestCase {
             )
         ]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
+        let mockSearchCache = MockSearchCache()
+        let subject = SearchViewModel(api: mockAPI, searchCache: mockSearchCache)
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [
             CLLocation(latitude: 37.786882, longitude: -122.399972)
@@ -43,6 +46,7 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
         XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertEqual(mockDelegate.numberOfSearches, 1)
+        XCTAssertTrue(mockSearchCache.didWrite)
         XCTAssertEqual(subject.businesses.count, 2)
         XCTAssertEqual(subject.imageCache.count, 2)
         XCTAssertTrue(subject.previousSearches.contains("some term"))

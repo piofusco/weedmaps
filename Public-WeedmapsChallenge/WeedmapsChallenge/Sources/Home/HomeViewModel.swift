@@ -24,7 +24,11 @@ class SearchViewModel: NSObject, HomeViewModel {
     private(set) var businesses: [Business] = []
     private(set) var imageCache: [Data?] = []
     private(set) var autoCompleteStrings = [String]()
-    private(set) var previousSearches: [String] = []
+    var previousSearches: [String] {
+        get {
+            searchCache.readPreviousSearches()
+        }
+    }
 
     weak var delegate: HomeViewModelDelegate?
 
@@ -40,14 +44,12 @@ class SearchViewModel: NSObject, HomeViewModel {
         self.searchCache = searchCache
 
         super.init()
-
-        previousSearches = searchCache.readPreviousSearches()
     }
 
     func search(term: String) {
         guard let location = location else { return }
         lastSearchedTerm = term
-        previousSearches.append(term)
+        searchCache.write(term)
 
         search(term: term, location: location, overwrite: true)
     }
