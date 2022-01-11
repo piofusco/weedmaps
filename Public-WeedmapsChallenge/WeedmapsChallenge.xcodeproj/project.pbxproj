@@ -18,15 +18,20 @@
 		5ABB14BC2167CF2400A2CB2C /* HomeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */; };
 		5ABB14BE2167D2D900A2CB2C /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */; };
 		BA6E3009A4DF778DF3DE9B75 /* MockAutoCompleteDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3FC6DD28DA2B70185EE5 /* MockAutoCompleteDelegate.swift */; };
+		BA6E308A07310A7CB46E2BCD /* SearchCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3F0511A68FE90F473E92 /* SearchCacheTests.swift */; };
 		BA6E31020B44B9ACCEB6A89C /* MockHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E36F283A8E19FD34335FA /* MockHomeViewModel.swift */; };
 		BA6E31C175C739EE7402B8F2 /* YelpAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E39F33F64B892B7651C11 /* YelpAPITests.swift */; };
 		BA6E31E155B74C61E40F5543 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E36E280F88AA40877453A /* HomeViewModel.swift */; };
+		BA6E3227901967D02E8A30A4 /* WeedmapsJSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3255BE0580FAD9845167 /* WeedmapsJSONEncoder.swift */; };
 		BA6E32F2729ADD64C04B0684 /* WeedmapsURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E355FA01A1849BB133FD4 /* WeedmapsURLSession.swift */; };
 		BA6E3318EE4A5EB13C9171F6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA6E37238BF64BE4FE31CF47 /* Localizable.strings */; };
+		BA6E33475A4E13C963BD9BEE /* SearchCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E34848F759B7B2B252059 /* SearchCache.swift */; };
 		BA6E336460D73B231A671FF3 /* MockJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3E392827291714DE0A90 /* MockJSONDecoder.swift */; };
+		BA6E34265840EF8378212A23 /* MockFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3DD8FB7FB3B44F7000B6 /* MockFileManager.swift */; };
 		BA6E344190DAD889587F9BA6 /* MockSearchViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E30A6BE9D2533B53B706A /* MockSearchViewModelDelegate.swift */; };
 		BA6E3490EE83B275516CA084 /* HomeViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3BE1BEE19AE86308316F /* HomeViewControllerTests.swift */; };
 		BA6E34BF721DC734BD393220 /* YelpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3D2C263B97BDA986463E /* YelpAPI.swift */; };
+		BA6E386620023203D6D26BE5 /* WeedmapsFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3F88CB0C7FC3C3FFBD66 /* WeedmapsFileManager.swift */; };
 		BA6E386C3D89DC7547C7F2C8 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3BE957AFEFE62E26FA1F /* HomeViewModelTests.swift */; };
 		BA6E38C98657A97BF19A3716 /* BusinessCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3547333E13B9B2DBD250 /* BusinessCollectionViewCell.swift */; };
 		BA6E38E3D3D54AEBABBD8DE9 /* WeedmapsJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E30FB0C9DBABB8D818B84 /* WeedmapsJSONDecoder.swift */; };
@@ -34,6 +39,7 @@
 		BA6E398D883D560F4E29D090 /* MockYellowPagesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3A55DC58FAEDCA2CE35E /* MockYellowPagesAPI.swift */; };
 		BA6E3A6BBF7FA0EA14104E04 /* MainQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3C1CCC6B99FCE3871DD8 /* MainQueue.swift */; };
 		BA6E3B14B341251C190E4B2C /* AutoCompleteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E370A970DF7B995828228 /* AutoCompleteTableViewController.swift */; };
+		BA6E3BDDCF5CE5A935AE374D /* MockJSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E30EEEE9DE68C2A52142B /* MockJSONEncoder.swift */; };
 		BA6E3C6A5E5DACEBFC831E49 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3A4161B7A45E4857BAA1 /* MockURLSession.swift */; };
 		BA6E3C790C45CD831825ABBD /* YelpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3E2AFF272823D23B4395 /* YelpError.swift */; };
 		BA6E3D41E15DC9E08A836DA1 /* AutoCompleteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E30D968F228319DF12130 /* AutoCompleteResponse.swift */; };
@@ -76,7 +82,10 @@
 		5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessCell.swift; sourceTree = "<group>"; };
 		BA6E30A6BE9D2533B53B706A /* MockSearchViewModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockSearchViewModelDelegate.swift; path = Mocks/MockSearchViewModelDelegate.swift; sourceTree = "<group>"; };
 		BA6E30D968F228319DF12130 /* AutoCompleteResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoCompleteResponse.swift; sourceTree = "<group>"; };
+		BA6E30EEEE9DE68C2A52142B /* MockJSONEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockJSONEncoder.swift; path = Mocks/MockJSONEncoder.swift; sourceTree = "<group>"; };
 		BA6E30FB0C9DBABB8D818B84 /* WeedmapsJSONDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeedmapsJSONDecoder.swift; path = Networking/WeedmapsJSONDecoder.swift; sourceTree = "<group>"; };
+		BA6E3255BE0580FAD9845167 /* WeedmapsJSONEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeedmapsJSONEncoder.swift; path = Networking/WeedmapsJSONEncoder.swift; sourceTree = "<group>"; };
+		BA6E34848F759B7B2B252059 /* SearchCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCache.swift; sourceTree = "<group>"; };
 		BA6E3547333E13B9B2DBD250 /* BusinessCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusinessCollectionViewCell.swift; sourceTree = "<group>"; };
 		BA6E355FA01A1849BB133FD4 /* WeedmapsURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WeedmapsURLSession.swift; path = Networking/WeedmapsURLSession.swift; sourceTree = "<group>"; };
 		BA6E36E280F88AA40877453A /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -92,8 +101,11 @@
 		BA6E3BE957AFEFE62E26FA1F /* HomeViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		BA6E3C1CCC6B99FCE3871DD8 /* MainQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainQueue.swift; sourceTree = "<group>"; };
 		BA6E3D2C263B97BDA986463E /* YelpAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpAPI.swift; path = Networking/YelpAPI.swift; sourceTree = "<group>"; };
+		BA6E3DD8FB7FB3B44F7000B6 /* MockFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockFileManager.swift; path = Mocks/MockFileManager.swift; sourceTree = "<group>"; };
 		BA6E3E2AFF272823D23B4395 /* YelpError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpError.swift; path = Networking/YelpError.swift; sourceTree = "<group>"; };
 		BA6E3E392827291714DE0A90 /* MockJSONDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockJSONDecoder.swift; path = Mocks/MockJSONDecoder.swift; sourceTree = "<group>"; };
+		BA6E3F0511A68FE90F473E92 /* SearchCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCacheTests.swift; sourceTree = "<group>"; };
+		BA6E3F88CB0C7FC3C3FFBD66 /* WeedmapsFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeedmapsFileManager.swift; sourceTree = "<group>"; };
 		BA6E3FC6DD28DA2B70185EE5 /* MockAutoCompleteDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockAutoCompleteDelegate.swift; path = Mocks/MockAutoCompleteDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -168,6 +180,9 @@
 				BA6E3A739DA731F87830B291 /* MockMainQueue.swift */,
 				BA6E378DAD3B521ADFACF4D5 /* AutoCompleteTableViewControllerTests.swift */,
 				BA6E3FC6DD28DA2B70185EE5 /* MockAutoCompleteDelegate.swift */,
+				BA6E3F0511A68FE90F473E92 /* SearchCacheTests.swift */,
+				BA6E3DD8FB7FB3B44F7000B6 /* MockFileManager.swift */,
+				BA6E30EEEE9DE68C2A52142B /* MockJSONEncoder.swift */,
 			);
 			path = WeedmapsChallengeTests;
 			sourceTree = "<group>";
@@ -215,6 +230,9 @@
 				BA6E30FB0C9DBABB8D818B84 /* WeedmapsJSONDecoder.swift */,
 				BA6E3C1CCC6B99FCE3871DD8 /* MainQueue.swift */,
 				BA6E30D968F228319DF12130 /* AutoCompleteResponse.swift */,
+				BA6E34848F759B7B2B252059 /* SearchCache.swift */,
+				BA6E3255BE0580FAD9845167 /* WeedmapsJSONEncoder.swift */,
+				BA6E3F88CB0C7FC3C3FFBD66 /* WeedmapsFileManager.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -413,6 +431,9 @@
 				BA6E3B14B341251C190E4B2C /* AutoCompleteTableViewController.swift in Sources */,
 				BA6E3A6BBF7FA0EA14104E04 /* MainQueue.swift in Sources */,
 				BA6E3D41E15DC9E08A836DA1 /* AutoCompleteResponse.swift in Sources */,
+				BA6E33475A4E13C963BD9BEE /* SearchCache.swift in Sources */,
+				BA6E3227901967D02E8A30A4 /* WeedmapsJSONEncoder.swift in Sources */,
+				BA6E386620023203D6D26BE5 /* WeedmapsFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +452,9 @@
 				BA6E3F935DA9DEBBBC7195EA /* MockMainQueue.swift in Sources */,
 				BA6E38FBC124588B1EA5B15E /* AutoCompleteTableViewControllerTests.swift in Sources */,
 				BA6E3009A4DF778DF3DE9B75 /* MockAutoCompleteDelegate.swift in Sources */,
+				BA6E308A07310A7CB46E2BCD /* SearchCacheTests.swift in Sources */,
+				BA6E34265840EF8378212A23 /* MockFileManager.swift in Sources */,
+				BA6E3BDDCF5CE5A935AE374D /* MockJSONEncoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
