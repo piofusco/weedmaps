@@ -8,17 +8,16 @@ import CoreLocation
 
 class MockYellowPagesAPI: YellowPagesAPI {
     var didSearch = false
-    var lastTerm: String?
-    var lastLocation: CLLocation?
+    var lastSearchTerm: String?
+    var lastSearchLocation: CLLocation?
     var lastOffset: Int?
-
     var nextPageResults: [Result<PageResponse, Error>] = []
 
     func search(term: String, location: CLLocation, offset: Int, completion: @escaping (Result<PageResponse, Error>) -> ()) {
         didSearch = true
 
-        lastTerm = term
-        lastLocation = location
+        lastSearchTerm = term
+        lastSearchLocation = location
         lastOffset = offset
 
         if nextPageResults.count > 0 {
@@ -28,7 +27,6 @@ class MockYellowPagesAPI: YellowPagesAPI {
 
     var didFetchImage = false
     var previousURLStrings = [String]()
-
     var nextImageResults: [Result<Data, Error>] = []
 
     func fetchImageData(urlString: String, completion: @escaping (Result<Data, Error>) -> ()) {
@@ -37,6 +35,19 @@ class MockYellowPagesAPI: YellowPagesAPI {
 
         if nextImageResults.count > 0 {
             completion(nextImageResults.removeFirst())
+        }
+    }
+
+    var lastAutoCompleteTerm: String?
+    var lastAutoCompleteLocation: CLLocation?
+    var nextAutoCompleteResult: Result<AutoCompleteResponse, Error>?
+
+    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<AutoCompleteResponse, Error>) -> ()) {
+        lastAutoCompleteTerm = term
+        lastAutoCompleteLocation = location
+
+        if let nextAutoCompleteResult = nextAutoCompleteResult {
+            completion(nextAutoCompleteResult)
         }
     }
 }

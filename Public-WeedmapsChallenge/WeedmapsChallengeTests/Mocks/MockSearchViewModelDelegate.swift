@@ -17,7 +17,7 @@ class MockSearchViewModelDelegate: HomeViewModelDelegate {
     var searchDidFail = false
     var searchErrors = [YelpError]()
 
-    func searchFailed(with error: Error) {
+    func searchDidFail(with error: Error) {
         searchDidFail = true
         searchErrors.append(error as! YelpError)
     }
@@ -40,5 +40,20 @@ class MockSearchViewModelDelegate: HomeViewModelDelegate {
         imageFetchDidFail = true
         failedImageRows.append(row)
         imageFetchErrors.append(error as! YelpError)
+    }
+
+    var didCallAutoComplete = false
+
+    func didAutoComplete() {
+        didCallAutoComplete = true
+    }
+
+    var didCallAutoCompleteDidFail = false
+    var autoCompleteErrors = [YelpError]()
+
+    func autoCompleteDidFail(with error: Error) {
+        didCallAutoCompleteDidFail = true
+
+        autoCompleteErrors.append(error as! YelpError)
     }
 }

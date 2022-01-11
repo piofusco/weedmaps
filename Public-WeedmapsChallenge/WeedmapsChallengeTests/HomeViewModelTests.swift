@@ -29,9 +29,9 @@ class HomeViewModelTests: XCTestCase {
 
         subject.search(term: "some term")
 
-        XCTAssertEqual(mockAPI.lastTerm, "some term")
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
+        XCTAssertEqual(mockAPI.lastSearchTerm, "some term")
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
         XCTAssertEqual(subject.imageCache.count, 2)
@@ -65,16 +65,16 @@ class HomeViewModelTests: XCTestCase {
 
         subject.search(term: "some term")
 
-        XCTAssertEqual(mockAPI.lastTerm, "some term")
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
+        XCTAssertEqual(mockAPI.lastSearchTerm, "some term")
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
         XCTAssertEqual(subject.imageCache.count, 2)
 
         subject.search(term: "another term")
 
-        XCTAssertEqual(mockAPI.lastTerm, "another term")
+        XCTAssertEqual(mockAPI.lastSearchTerm, "another term")
         XCTAssertEqual(subject.businesses.count, 1)
         XCTAssertEqual(subject.imageCache.count, 1)
     }
@@ -109,16 +109,16 @@ class HomeViewModelTests: XCTestCase {
 
         subject.search(term: "some term")
 
-        XCTAssertEqual(mockAPI.lastTerm, "some term")
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
+        XCTAssertEqual(mockAPI.lastSearchTerm, "some term")
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.latitude, CLLocationDegrees(37.786882))
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.longitude, CLLocationDegrees(-122.399972))
         XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
         XCTAssertEqual(subject.imageCache.count, 2)
 
         subject.loadNextPageOfBusinesses()
 
-        XCTAssertEqual(mockAPI.lastTerm, "some term")
+        XCTAssertEqual(mockAPI.lastSearchTerm, "some term")
         XCTAssertEqual(mockAPI.lastOffset, 2)
         XCTAssertEqual(mockDelegate.numberOfSearches, 2)
         XCTAssertEqual(subject.businesses.count, 5)
@@ -135,9 +135,9 @@ class HomeViewModelTests: XCTestCase {
 
         subject.search(term: "some term")
 
-        XCTAssertEqual(mockAPI.lastTerm, "some term")
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.latitude, CLLocationDegrees(37.78))
-        XCTAssertEqual(mockAPI.lastLocation?.coordinate.longitude, CLLocationDegrees(-122.39))
+        XCTAssertEqual(mockAPI.lastSearchTerm, "some term")
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.latitude, CLLocationDegrees(37.78))
+        XCTAssertEqual(mockAPI.lastSearchLocation?.coordinate.longitude, CLLocationDegrees(-122.39))
         XCTAssertEqual(mockDelegate.numberOfSearches, 0)
         XCTAssertTrue(mockDelegate.searchDidFail)
         XCTAssertEqual(mockDelegate.searchErrors[0], YelpError.unexpected(code: -1))
@@ -171,8 +171,8 @@ class HomeViewModelTests: XCTestCase {
         subject.loadNextPageOfBusinesses()
 
         XCTAssertEqual(subject.businesses.count, 0)
-        XCTAssertNil(mockAPI.lastTerm)
-        XCTAssertNil(mockAPI.lastLocation)
+        XCTAssertNil(mockAPI.lastSearchTerm)
+        XCTAssertNil(mockAPI.lastSearchLocation)
         XCTAssertEqual(mockDelegate.numberOfSearches, 0)
     }
 
@@ -235,6 +235,56 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockDelegate.imageFetchErrors[0], YelpError.badRequest)
         XCTAssertEqual(mockDelegate.fetchedImageRows.count, 0)
         XCTAssertEqual(mockDelegate.imageData.count, 0)
+    }
+
+    func test__autoComplete__withLocation__success__callDelegate() {
+        let mockAPI = MockYellowPagesAPI()
+        mockAPI.nextAutoCompleteResult = .success(AutoCompleteResponse(categories: [], businesses: [], terms: []))
+        let mockDelegate = MockSearchViewModelDelegate()
+        let subject = SearchViewModel(api: mockAPI)
+        subject.delegate = mockDelegate
+        subject.locationManager(CLLocationManager(), didUpdateLocations: [expectedLocation])
+
+        subject.autoComplete(term: "some term")
+
+        XCTAssertEqual(mockAPI.lastAutoCompleteTerm, "some term")
+        XCTAssertEqual(mockAPI.lastAutoCompleteLocation?.coordinate.latitude, CLLocationDegrees(37.78))
+        XCTAssertEqual(mockAPI.lastAutoCompleteLocation?.coordinate.longitude, CLLocationDegrees(-122.39))
+        XCTAssertEqual(subject.autoCompleteResponse?.categories.count, 0)
+        XCTAssertEqual(subject.autoCompleteResponse?.businesses.count, 0)
+        XCTAssertEqual(subject.autoCompleteResponse?.terms.count, 0)
+        XCTAssertTrue(mockDelegate.didCallAutoComplete)
+    }
+
+    func test__autoComplete__withoutLocation__doesNothing() {
+        let mockAPI = MockYellowPagesAPI()
+        let mockDelegate = MockSearchViewModelDelegate()
+        let subject = SearchViewModel(api: mockAPI)
+        subject.delegate = mockDelegate
+
+        subject.autoComplete(term: "some term")
+
+        XCTAssertFalse(mockAPI.didSearch)
+        XCTAssertEqual(mockDelegate.numberOfSearches, 0)
+    }
+
+    func test__autoComplete__withLocation__failure__willCallDelegateWithFailure() {
+        let mockAPI = MockYellowPagesAPI()
+        mockAPI.nextAutoCompleteResult = .failure(YelpError.unexpected(code: -1))
+        let mockDelegate = MockSearchViewModelDelegate()
+        let subject = SearchViewModel(api: mockAPI)
+        subject.delegate = mockDelegate
+        subject.locationManager(CLLocationManager(), didUpdateLocations: [expectedLocation])
+
+        subject.autoComplete(term: "some term")
+
+        XCTAssertEqual(mockAPI.lastAutoCompleteTerm, "some term")
+        XCTAssertEqual(mockAPI.lastAutoCompleteLocation?.coordinate.latitude, CLLocationDegrees(37.78))
+        XCTAssertEqual(mockAPI.lastAutoCompleteLocation?.coordinate.longitude, CLLocationDegrees(-122.39))
+        XCTAssertFalse(mockDelegate.didCallAutoComplete)
+        XCTAssertTrue(mockDelegate.didCallAutoCompleteDidFail)
+        XCTAssertEqual(mockDelegate.autoCompleteErrors[0], YelpError.unexpected(code: -1))
+        XCTAssertNil(subject.autoCompleteResponse)
     }
 }
 

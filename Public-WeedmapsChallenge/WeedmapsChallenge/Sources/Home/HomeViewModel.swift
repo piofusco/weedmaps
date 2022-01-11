@@ -9,18 +9,22 @@ import CoreLocation
 protocol HomeViewModel: AnyObject {
     var businesses: [Business] { get }
     var imageCache: [Data?] { get }
+    var autoCompleteResponse: AutoCompleteResponse? { get }
     var delegate: HomeViewModelDelegate? { get set }
 
     func search(term: String)
     func loadNextPageOfBusinesses()
     func fetchImageData(index: Int, urlString: String)
+    func autoComplete(term: String)
 }
 
 class SearchViewModel: NSObject, HomeViewModel {
     private(set) var businesses: [Business] = []
     private(set) var imageCache: [Data?] = []
+    private(set) var autoCompleteResponse: AutoCompleteResponse?
     private var location: CLLocation?
     private var lastSearchedTerm: String?
+    private var lastAutoCompleteTerm: String?
 
     weak var delegate: HomeViewModelDelegate?
 
@@ -61,7 +65,7 @@ class SearchViewModel: NSObject, HomeViewModel {
                 }
                 self.delegate?.didSearch()
             case .failure(let error):
-                self.delegate?.searchFailed(with: error)
+                self.delegate?.searchDidFail(with: error)
             }
         }
     }
@@ -76,6 +80,23 @@ class SearchViewModel: NSObject, HomeViewModel {
                 self.imageCache[index] = data
             case .failure(let error):
                 self.delegate?.imageFetchFailed(for: index, with: error)
+            }
+        }
+    }
+
+    func autoComplete(term: String) {
+        guard let location = location else { return }
+        lastAutoCompleteTerm = term
+
+        api.autocomplete(term: term, location: location) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let response):
+                self.autoCompleteResponse = response
+                self.delegate?.didAutoComplete()
+            case .failure(let error):
+                self.delegate?.autoCompleteDidFail(with: error)
             }
         }
     }

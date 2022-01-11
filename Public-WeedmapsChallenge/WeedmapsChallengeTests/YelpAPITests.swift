@@ -262,6 +262,147 @@ class YelpAPITest: XCTestCase {
 
         XCTAssertFalse(completionDidRun)
     }
+
+    func test__autocomplete__callResume__ensureRequest() {
+        let mockURLSession = MockURLSession()
+        let mockURLSessionDataTask = MockURLSessionDataTask()
+        mockURLSession.nextDataTask = mockURLSessionDataTask
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { _ in }
+
+        XCTAssertTrue(mockURLSessionDataTask.didResume)
+        XCTAssertEqual(mockURLSession.lastURL, URL(string: "https://api.yelp.com/v3/autocomplete?term=banana&latitude=37.78&longitude=-122.39"))
+        guard let lastHeaders = mockURLSession.lastHeaders else {
+            XCTFail("No headers set")
+            return
+        }
+        guard let authorization = lastHeaders["Authorization"] else {
+            XCTFail("Authorization not set")
+            return
+        }
+        XCTAssertEqual(authorization, "Bearer EVgb3CNoYvRGgR2Elu6gpThMZMWJBrJP-XPNGSzM9-uO-mm316e3XxWqPXiHkB9KxW_B4WEQe4Jw82A44KGuBri6Wk_kgM1UioFgLimIY_Z2jUnqjfhqwEx6JyvbYXYx")
+    }
+
+    func test__autocomplete__200__callCompletionWithData() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
+        mockURLSession.nextData = autocompleteJSONResponse
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+        var returnedAutoCompleteResponse: AutoCompleteResponse?
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { result in
+            completionDidRun = true
+
+            switch result {
+            case .success(let response): returnedAutoCompleteResponse = response
+            case .failure(_): XCTFail("result shouldn't be a failure")
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+        XCTAssertEqual(returnedAutoCompleteResponse?.categories.count, 2)
+        XCTAssertEqual(returnedAutoCompleteResponse?.businesses.count, 2)
+        XCTAssertEqual(returnedAutoCompleteResponse?.terms.count, 2)
+    }
+
+    func test__autocomplete__200__noData__runCompletionWithFailure() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__autocomplete__200__badData__runCompletionWithFailure() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let mockJSONDecoder = MockJSONDecoder<Business>()
+        mockJSONDecoder.nextDecodable = Business(id: "", name: "", url: "", price: "", imageURL: "")
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: mockJSONDecoder)
+        var completionDidRun = false
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__autocomplete__400__callCompletionWithFailure() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.BadRequestError]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__autocomplete__500__callCompletionWithFailure() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextResponses = [HTTPURLResponse.InternalServerError]
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(let error):
+                completionDidRun = true
+                XCTAssertTrue(error is YelpError)
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
+    func test__autocomplete__error__callCompletionWithError() {
+        let mockURLSession = MockURLSession()
+        mockURLSession.nextError = NSError(domain: "doesn't matter", code: 666)
+        mockURLSession.nextDataTask = MockURLSessionDataTask()
+        let subject = YelpAPI(urlSession: mockURLSession, decoder: JSONDecoder())
+        var completionDidRun = false
+
+        subject.autocomplete(term: "banana", location: expectedLocation) { result in
+            switch result {
+            case .success(_): XCTFail("result shouldn't be a failure")
+            case .failure(_): completionDidRun = true
+            }
+        }
+
+        XCTAssertTrue(completionDidRun)
+    }
+
 }
 
 extension HTTPURLResponse {
@@ -351,6 +492,39 @@ fileprivate let businessesJSONResponse = """
         }
     ],
     "total": 240
+}
+""".data(using: .utf8)
+
+fileprivate let autocompleteJSONResponse = """
+{
+    "categories": [
+        {
+            "alias": "appliances",
+            "title": "Appliances"
+        },
+        {
+            "alias": "homeappliancerepair",
+            "title": "Appliances & Repair"
+        }
+    ],
+    "businesses": [
+        {
+            "id": "EOM6CItD6sI5P3a-JV61_Q",
+            "name": "Applebee's Grill + Bar"
+        },
+        {
+            "id": "dw3ynParaDTHdOanoxyf1Q",
+            "name": "Apple Union Square"
+        }
+    ],
+    "terms": [
+        {
+            "text": "Apple Picking Farm"
+        },
+        {
+            "text": "Apple Hill Farms"
+        }
+    ]
 }
 """.data(using: .utf8)
 

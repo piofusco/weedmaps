@@ -6,10 +6,13 @@ import UIKit
 
 protocol HomeViewModelDelegate: AnyObject {
     func didSearch()
-    func searchFailed(with error: Error)
+    func searchDidFail(with error: Error)
 
     func didFetchImage(for row: Int, data: Data)
     func imageFetchFailed(for row: Int, with error: Error)
+
+    func didAutoComplete()
+    func autoCompleteDidFail(with error: Error)
 }
 
 class HomeViewController: UIViewController {
@@ -115,7 +118,7 @@ extension HomeViewController: HomeViewModelDelegate {
         }
     }
 
-    func searchFailed(with error: Error) {
+    func searchDidFail(with error: Error) {
 
     }
 
@@ -128,6 +131,13 @@ extension HomeViewController: HomeViewModelDelegate {
     }
 
     func imageFetchFailed(for row: Int, with error: Error) {
+    }
+
+    func didAutoComplete() {
+
+    }
+
+    func autoCompleteDidFail(with error: Error) {
     }
 }
 

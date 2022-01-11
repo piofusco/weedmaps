@@ -45,4 +45,17 @@ class MockHomeViewModel: HomeViewModel {
 
         delegate?.didFetchImage(for: index, data: "".data(using: .utf8)!)
     }
+
+    var nextAutoCompleteResponse: AutoCompleteResponse?
+    var autoCompleteResponse: AutoCompleteResponse? {
+        get {
+            nextAutoCompleteResponse!
+        }
+    }
+
+    func autoComplete(term: String) {
+
+    }
+
+
 }

@@ -9,6 +9,8 @@ import CoreLocation
 protocol YellowPagesAPI {
     func search(term: String, location: CLLocation, offset: Int, completion: @escaping (Result<PageResponse, Error>) -> ())
     func fetchImageData(urlString: String, completion: @escaping (Result<Data, Error>) -> Void)
+
+    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<AutoCompleteResponse, Error>) -> ())
 }
 
 class YelpAPI: YellowPagesAPI {
@@ -104,6 +106,60 @@ class YelpAPI: YellowPagesAPI {
                 }
 
                 completion(Result.success(data))
+            case 400..<499: completion(Result.failure(YelpError.badRequest))
+            case 500..<599: completion(Result.failure(YelpError.internalServerError))
+            default: completion(Result.failure(YelpError.unexpected(code: -1)))
+            }
+        }.resume()
+    }
+
+    func autocomplete(term: String, location: CLLocation, completion: @escaping (Result<AutoCompleteResponse, Error>) -> ()) {
+        var urlComponents = baseURLComponents
+        urlComponents.queryItems = [
+            URLQueryItem(name: "term", value: term),
+            URLQueryItem(name: "latitude", value: "\(location.coordinate.latitude)"),
+            URLQueryItem(name: "longitude", value: "\(location.coordinate.longitude)"),
+        ]
+        urlComponents.path = "/v3/autocomplete"
+
+        guard let url = urlComponents.url else {
+            completion(Result.failure(YelpError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+
+        urlSession.makeDataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+
+            if let error = error { completion(Result.failure(error)) }
+
+            guard let response = response as? HTTPURLResponse else {
+                completion(Result.failure(YelpError.unexpected(code: -1)))
+                return
+            }
+
+            switch response.statusCode {
+            case 200..<299:
+                guard let data = data else {
+                    completion(Result.failure(YelpError.noDataReturned))
+                    return
+                }
+
+                var response: AutoCompleteResponse?
+                do {
+                    response = try self.decoder.decode(AutoCompleteResponse.self, from: data)
+                } catch {
+                    completion(Result.failure(YelpError.invalidJSON))
+                }
+
+                guard let responseToReturn = response else {
+                    completion(Result.failure(YelpError.unexpected(code: -1)))
+                    return
+                }
+
+                completion(Result.success(responseToReturn))
             case 400..<499: completion(Result.failure(YelpError.badRequest))
             case 500..<599: completion(Result.failure(YelpError.internalServerError))
             default: completion(Result.failure(YelpError.unexpected(code: -1)))
