@@ -45,3 +45,11 @@ extension AutoCompleteTableViewController: UISearchResultsUpdating {
         delegate?.searchBarDidUpdate(term: term)
     }
 }
+
+extension AutoCompleteTableViewController: UISearchBarDelegate {
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else { return }
+
+        delegate?.didSelectTerm(term: text)
+    }
+}

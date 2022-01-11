@@ -80,6 +80,15 @@ class HomeViewControllerTests: XCTestCase {
         XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
     }
 
+    func test__SearchViewModelDelegate__didAutoComplete__callsDispatchQueue() {
+        let mockMainQueue = MockMainQueue()
+        let subject = HomeViewController(viewModel: MockHomeViewModel(), mainQueue: mockMainQueue)
+
+        subject.didFetchImage(for: 0, data: "".data(using: .utf8)!)
+
+        XCTAssertEqual(mockMainQueue.numberOfAsyncCalls, 1)
+    }
+
     func test__AutoCompleteDelegate__searchBarDidUpdate__willCallAutoCompleteOnViewModel() {
         let mockHomeViewModel = MockHomeViewModel()
         let subject = HomeViewController(viewModel: mockHomeViewModel, mainQueue: MockMainQueue())

@@ -69,6 +69,7 @@ class HomeViewController: UIViewController {
 
         searchController = UISearchController(searchResultsController: autoCompleteTableViewController)
         searchController?.searchResultsUpdater = autoCompleteTableViewController
+        searchController?.searchBar.delegate = autoCompleteTableViewController
         searchController?.obscuresBackgroundDuringPresentation = false
         searchController?.searchBar.placeholder = "Search business names"
 

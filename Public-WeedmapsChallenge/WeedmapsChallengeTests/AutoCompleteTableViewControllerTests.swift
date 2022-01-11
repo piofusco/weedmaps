@@ -29,4 +29,16 @@ class AutoCompleteTableViewControllerTests: XCTestCase {
 
         XCTAssertEqual(mockAutoCompleteDelegate.lastSearchedTerm, "this text?")
     }
+
+    func test__UISearchBarDelegate__searchBarSearchButtonClicked__willCallDelegate() {
+        let mockAutoCompleteDelegate = MockAutoCompleteDelegate()
+        let subject = AutoCompleteTableViewController()
+        subject.delegate = mockAutoCompleteDelegate
+        let stubSearchBar = UISearchBar()
+        stubSearchBar.text = "this text?"
+
+        subject.searchBarSearchButtonClicked(stubSearchBar)
+
+        XCTAssertEqual(mockAutoCompleteDelegate.lastSelectedTerm, "this text?")
+    }
 }
