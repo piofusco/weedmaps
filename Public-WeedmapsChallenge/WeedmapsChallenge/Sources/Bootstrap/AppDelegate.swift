@@ -20,8 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let yellowPagesAPI = YelpAPI(urlSession: URLSession.shared, decoder: JSONDecoder())
-        let searchViewModel = SearchViewModel(api: yellowPagesAPI)
+        let decoder = JSONDecoder()
+        let encoder = JSONEncoder()
+        let fileManager = FileManager.default
+        let searchCache = WeedmapsSearchCache(fileManager: fileManager, decoder: decoder, encoder: encoder)
+        let yellowPagesAPI = YelpAPI(urlSession: URLSession.shared, decoder: decoder)
+        let searchViewModel = SearchViewModel(api: yellowPagesAPI, searchCache: searchCache)
         locationManager.delegate = searchViewModel
         locationManager.requestWhenInUseAuthorization()
         locationManager.startMonitoringSignificantLocationChanges() // need to eventually stop tracking this

@@ -8,7 +8,17 @@ import XCTest
 @testable import WeedmapsChallenge
 
 class HomeViewModelTests: XCTestCase {
-    func test__search__withLocation__success__willCallDelegate__updateImageData() {
+    func test__init__willRestorePreviousSearchesFromCache() {
+        let mockAPI = MockYellowPagesAPI()
+        let mockSearchCache = MockSearchCache()
+        mockSearchCache.nextPreviousSearches = ["search 1", "search 2"]
+        let subject = SearchViewModel(api: mockAPI, searchCache: mockSearchCache)
+
+        XCTAssertTrue(mockSearchCache.didRead)
+        XCTAssertEqual(subject.previousSearches, ["search 1", "search 2"])
+    }
+
+    func test__search__withLocation__success__willCallDelegate__updateImageData__updateSearchCache() {
         let mockAPI = MockYellowPagesAPI()
         mockAPI.nextPageResults = [
             .success(
@@ -21,7 +31,7 @@ class HomeViewModelTests: XCTestCase {
             )
         ]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [
             CLLocation(latitude: 37.786882, longitude: -122.399972)
@@ -35,9 +45,10 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockDelegate.numberOfSearches, 1)
         XCTAssertEqual(subject.businesses.count, 2)
         XCTAssertEqual(subject.imageCache.count, 2)
+        XCTAssertTrue(subject.previousSearches.contains("some term"))
     }
 
-    func test__searchingNewTerm__overwriteOldResults() {
+    func test__searchingNewTerm__overwriteOldResults__storeTermOnceInCache() {
         let mockAPI = MockYellowPagesAPI()
         mockAPI.nextPageResults = [
             .success(
@@ -57,7 +68,7 @@ class HomeViewModelTests: XCTestCase {
             )
         ]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [
             CLLocation(latitude: 37.786882, longitude: -122.399972)
@@ -101,7 +112,7 @@ class HomeViewModelTests: XCTestCase {
             )
         ]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [
             CLLocation(latitude: 37.786882, longitude: -122.399972)
@@ -123,13 +134,15 @@ class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(mockDelegate.numberOfSearches, 2)
         XCTAssertEqual(subject.businesses.count, 5)
         XCTAssertEqual(subject.imageCache.count, 5)
+        XCTAssertTrue(subject.previousSearches.contains("some term"))
+        XCTAssertEqual(subject.previousSearches.count, 1)
     }
 
     func test__search__withLocation__failure__willCallDelegateWithFailure() {
         let mockAPI = MockYellowPagesAPI()
         mockAPI.nextPageResults = [.failure(YelpError.unexpected(code: -1))]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [expectedLocation])
 
@@ -147,7 +160,7 @@ class HomeViewModelTests: XCTestCase {
     func test__search__withoutLocation__doesNothing() {
         let mockAPI = MockYellowPagesAPI()
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
 
         subject.search(term: "some term")
@@ -162,7 +175,7 @@ class HomeViewModelTests: XCTestCase {
             Business(id: "some id 1", name: "some name 1", url: "some url 1", price: "some price 1", imageURL: "some image url 1")
         ]))]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [
             CLLocation(latitude: 37.786882, longitude: -122.399972)
@@ -195,7 +208,7 @@ class HomeViewModelTests: XCTestCase {
             .success("third".data(using: .utf8)!)
         ]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [expectedLocation])
         subject.search(term: "whatever")
@@ -223,7 +236,7 @@ class HomeViewModelTests: XCTestCase {
         let mockAPI = MockYellowPagesAPI()
         mockAPI.nextImageResults = [.failure(YelpError.badRequest)]
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
 
         subject.fetchImageData(index: 0, urlString: "http://www.image0.com")
@@ -241,7 +254,7 @@ class HomeViewModelTests: XCTestCase {
         let mockAPI = MockYellowPagesAPI()
         mockAPI.nextAutoCompleteResult = .success([String]())
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [expectedLocation])
 
@@ -257,7 +270,7 @@ class HomeViewModelTests: XCTestCase {
     func test__autoComplete__withoutLocation__doesNothing() {
         let mockAPI = MockYellowPagesAPI()
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
 
         subject.autoComplete(term: "some term")
@@ -270,7 +283,7 @@ class HomeViewModelTests: XCTestCase {
         let mockAPI = MockYellowPagesAPI()
         mockAPI.nextAutoCompleteResult = .failure(YelpError.unexpected(code: -1))
         let mockDelegate = MockSearchViewModelDelegate()
-        let subject = SearchViewModel(api: mockAPI)
+        let subject = SearchViewModel(api: mockAPI, searchCache: MockSearchCache())
         subject.delegate = mockDelegate
         subject.locationManager(CLLocationManager(), didUpdateLocations: [expectedLocation])
 

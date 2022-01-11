@@ -10,6 +10,8 @@ protocol HomeViewModel: AnyObject {
     var businesses: [Business] { get }
     var imageCache: [Data?] { get }
     var autoCompleteStrings: [String] { get }
+    var previousSearches: [String] { get }
+
     var delegate: HomeViewModelDelegate? { get set }
 
     func search(term: String)
@@ -22,23 +24,30 @@ class SearchViewModel: NSObject, HomeViewModel {
     private(set) var businesses: [Business] = []
     private(set) var imageCache: [Data?] = []
     private(set) var autoCompleteStrings = [String]()
+    private(set) var previousSearches: [String] = []
+
+    weak var delegate: HomeViewModelDelegate?
+
     private var location: CLLocation?
     private var lastSearchedTerm: String?
     private var lastAutoCompleteTerm: String?
 
-    weak var delegate: HomeViewModelDelegate?
-
     private let api: YellowPagesAPI
+    private let searchCache: SearchCache
 
-    init(api: YellowPagesAPI) {
+    init(api: YellowPagesAPI, searchCache: SearchCache) {
         self.api = api
+        self.searchCache = searchCache
+
+        super.init()
+
+        previousSearches = searchCache.readPreviousSearches()
     }
 
     func search(term: String) {
         guard let location = location else { return }
         lastSearchedTerm = term
-
-        // Should we wipe old businesses/images here?
+        previousSearches.append(term)
 
         search(term: term, location: location, overwrite: true)
     }

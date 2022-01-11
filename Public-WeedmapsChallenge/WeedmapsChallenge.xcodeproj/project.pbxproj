@@ -23,6 +23,7 @@
 		BA6E31C175C739EE7402B8F2 /* YelpAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E39F33F64B892B7651C11 /* YelpAPITests.swift */; };
 		BA6E31E155B74C61E40F5543 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E36E280F88AA40877453A /* HomeViewModel.swift */; };
 		BA6E3227901967D02E8A30A4 /* WeedmapsJSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3255BE0580FAD9845167 /* WeedmapsJSONEncoder.swift */; };
+		BA6E32DA51A045AA3030FD0F /* MockSearchCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3D45927BCC7FE804C8D6 /* MockSearchCache.swift */; };
 		BA6E32F2729ADD64C04B0684 /* WeedmapsURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E355FA01A1849BB133FD4 /* WeedmapsURLSession.swift */; };
 		BA6E3318EE4A5EB13C9171F6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA6E37238BF64BE4FE31CF47 /* Localizable.strings */; };
 		BA6E33475A4E13C963BD9BEE /* SearchCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E34848F759B7B2B252059 /* SearchCache.swift */; };
@@ -101,6 +102,7 @@
 		BA6E3BE957AFEFE62E26FA1F /* HomeViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		BA6E3C1CCC6B99FCE3871DD8 /* MainQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainQueue.swift; sourceTree = "<group>"; };
 		BA6E3D2C263B97BDA986463E /* YelpAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpAPI.swift; path = Networking/YelpAPI.swift; sourceTree = "<group>"; };
+		BA6E3D45927BCC7FE804C8D6 /* MockSearchCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockSearchCache.swift; path = Mocks/MockSearchCache.swift; sourceTree = "<group>"; };
 		BA6E3DD8FB7FB3B44F7000B6 /* MockFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockFileManager.swift; path = Mocks/MockFileManager.swift; sourceTree = "<group>"; };
 		BA6E3E2AFF272823D23B4395 /* YelpError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YelpError.swift; path = Networking/YelpError.swift; sourceTree = "<group>"; };
 		BA6E3E392827291714DE0A90 /* MockJSONDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockJSONDecoder.swift; path = Mocks/MockJSONDecoder.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				BA6E3F0511A68FE90F473E92 /* SearchCacheTests.swift */,
 				BA6E3DD8FB7FB3B44F7000B6 /* MockFileManager.swift */,
 				BA6E30EEEE9DE68C2A52142B /* MockJSONEncoder.swift */,
+				BA6E3D45927BCC7FE804C8D6 /* MockSearchCache.swift */,
 			);
 			path = WeedmapsChallengeTests;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 				BA6E308A07310A7CB46E2BCD /* SearchCacheTests.swift in Sources */,
 				BA6E34265840EF8378212A23 /* MockFileManager.swift in Sources */,
 				BA6E3BDDCF5CE5A935AE374D /* MockJSONEncoder.swift in Sources */,
+				BA6E32DA51A045AA3030FD0F /* MockSearchCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

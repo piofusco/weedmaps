@@ -62,4 +62,6 @@ class MockHomeViewModel: HomeViewModel {
     func autoComplete(term: String) {
         lastAutoCompleteTerm = term
     }
+
+    private(set) var previousSearches: [String] = []
 }
