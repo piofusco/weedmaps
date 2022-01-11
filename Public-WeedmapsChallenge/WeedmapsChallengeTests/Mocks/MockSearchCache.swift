@@ -12,6 +12,8 @@ class MockSearchCache: SearchCache {
     func write(_ previousSearch: String) {
         didWrite = true
         lastWrite = previousSearch
+
+        nextPreviousSearches.append(previousSearch)
     }
 
     var didRead = false
