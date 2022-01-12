@@ -38,6 +38,8 @@ class HomeViewController: UIViewController {
         return autoCompleteTableViewController
     }()
 
+    private let refreshControl = UIRefreshControl()
+
     private var searchController: UISearchController?
 
     private var oldTotal = 0
@@ -62,6 +64,9 @@ class HomeViewController: UIViewController {
         navigationItem.title = "Search"
 
         view = collectionView
+        view.addSubview(refreshControl)
+
+        refreshControl.addTarget(self, action: #selector(refreshSearch(_:)), for: .valueChanged)
     }
 
     override func viewDidLoad() {
@@ -79,6 +84,14 @@ class HomeViewController: UIViewController {
         navigationItem.searchController = searchController
         navigationController?.setStatusBar(backgroundColor: .white)
         definesPresentationContext = true
+    }
+
+    @objc
+    private func refreshSearch( _ sender: Any) {
+        guard let term = searchController?.searchBar.text, !term.isEmpty else { return }
+
+        viewModel.search(term: term)
+        refreshControl.beginRefreshing()
     }
 }
 
@@ -124,6 +137,7 @@ extension HomeViewController: HomeViewModelDelegate {
 
             if overwrite {
                 self.oldTotal = 0
+                self.refreshControl.endRefreshing()
                 self.collectionView.reloadData()
             } else {
                 var newIndexPaths = [IndexPath]()
