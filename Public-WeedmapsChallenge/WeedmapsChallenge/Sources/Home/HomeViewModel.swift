@@ -74,7 +74,7 @@ class SearchViewModel: NSObject, HomeViewModel {
                     self.businesses = response.businesses
                     self.imageCache = [Data?](repeating: nil, count: self.businesses.count)
                 }
-                self.delegate?.didSearch()
+                self.delegate?.didSearch(overwrite: overwrite)
             case .failure(let error):
                 self.delegate?.searchDidFail(with: error)
             }

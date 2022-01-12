@@ -29,7 +29,7 @@ class MockHomeViewModel: HomeViewModel {
     func search(term: String) {
         lastSearchedTerm = term
 
-        delegate?.didSearch()
+        delegate?.didSearch(overwrite: true)
     }
 
     var didLoadNextPage = false
@@ -37,7 +37,7 @@ class MockHomeViewModel: HomeViewModel {
     func loadNextPageOfBusinesses() {
         didLoadNextPage = true
 
-        delegate?.didSearch()
+        delegate?.didSearch(overwrite: true)
     }
 
     var imageURLStrings = [String]()

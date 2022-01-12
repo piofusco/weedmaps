@@ -5,7 +5,7 @@
 import UIKit
 
 protocol HomeViewModelDelegate: AnyObject {
-    func didSearch()
+    func didSearch(overwrite: Bool)
     func searchDidFail(with error: Error)
 
     func didFetchImage(for row: Int, data: Data)
@@ -115,16 +115,20 @@ extension HomeViewController: UICollectionViewDataSource {
 }
 
 extension HomeViewController: HomeViewModelDelegate {
-    func didSearch() {
+    func didSearch(overwrite: Bool) {
         mainQueue.async { [weak self] in
             guard let self = self else { return }
 
-            var newIndexPaths = [IndexPath]()
-            for i in self.oldTotal..<self.viewModel.businesses.count {
-                newIndexPaths.append(IndexPath(row: i, section: 0))
+            if overwrite {
+                self.oldTotal = 0
+                self.collectionView.reloadData()
+            } else {
+                var newIndexPaths = [IndexPath]()
+                for i in self.oldTotal..<self.viewModel.businesses.count {
+                    newIndexPaths.append(IndexPath(row: i, section: 0))
+                }
+                self.collectionView.insertItems(at: newIndexPaths)
             }
-
-            self.collectionView.insertItems(at: newIndexPaths)
         }
     }
 
@@ -191,7 +195,6 @@ extension HomeViewController: AutoCompleteDelegate {
         searchController?.searchBar.text = term
         searchController?.searchBar.searchTextField.resignFirstResponder()
         searchController?.searchBar.showsCancelButton = false
-        oldTotal = 0
         viewModel.search(term: term)
     }
 }
@@ -205,7 +208,6 @@ extension HomeViewController: UISearchBarDelegate {
         searchController?.searchBar.text = term
         searchController?.searchBar.searchTextField.resignFirstResponder()
         searchController?.searchBar.showsCancelButton = false
-        oldTotal = 0
         viewModel.search(term: term)
     }
 
@@ -228,7 +230,6 @@ extension HomeViewController: UISearchBarDelegate {
     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let text = searchBar.text, text.isEmpty else {
             autoCompleteTableViewController.displayPreviousSearches = false
-            searchController?.showsSearchResultsController = false
             return
         }
 

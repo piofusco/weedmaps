@@ -10,7 +10,7 @@ import Foundation
 class MockSearchViewModelDelegate: HomeViewModelDelegate {
     var numberOfSearches = 0
 
-    func didSearch() {
+    func didSearch(overwrite: Bool) {
         numberOfSearches += 1
     }
 

@@ -34,8 +34,10 @@ class WeedmapsSearchCache: SearchCache {
         guard let dictionary = NSMutableDictionary(contentsOfFile: pathToPropertyList) else { return }
 
         if var previousSearches = dictionary["searches"] as? [String] {
-            previousSearches.append(newSearch)
-            dictionary["searches"] = previousSearches
+            if !previousSearches.contains(newSearch) {
+                previousSearches.append(newSearch)
+                dictionary["searches"] = previousSearches
+            }
         } else {
             dictionary["searches"] = [newSearch]
         }
