@@ -189,8 +189,10 @@ extension HomeViewController: UICollectionViewDelegate {
             let detailViewController = HomeDetailViewController(url: url)
             self.navigationController?.pushViewController(detailViewController, animated: true)
         }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(safari)
         alert.addAction(webView)
+        alert.addAction(cancel)
 
         present(alert, animated: true)
     }
