@@ -11,25 +11,47 @@ import XCTest
 class WeedmapsChallengeUITests: XCTestCase {
 
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     func testTabBarTitleLabelsExist() {
         let app = XCUIApplication()
-        XCTAssertTrue(app.staticTexts["Home Title Label"].exists)
-        app.tabBars.buttons["Favorites"].tap()
-        XCTAssertTrue(app.staticTexts["Favorites Title Label"].exists)
+
+        addUIInterruptionMonitor(withDescription: "Location Dialog") { (alert) -> Bool in
+            alert.buttons["Allow While Using App"].tap()
+            return true
+        }
+        app.tap()
+
+        let searchField = app.searchFields.firstMatch
+        searchField.tap()
+        searchField.typeText("Burgers")
+
+        let autoCompleteTableView = app.tables.firstMatch
+        XCTAssertTrue(autoCompleteTableView.cells.count > 0)
+
+        let autoCompleteCell = autoCompleteTableView.cells.staticTexts["Burgers"]
+        autoCompleteCell.tap()
+
+        XCTAssertTrue(app.collectionViews.firstMatch.exists)
+        let resultsCollectionViewTable = app.collectionViews.firstMatch
+        resultsCollectionViewTable.cells.firstMatch.waitForExistence(timeout: 5.0)
+        XCTAssertTrue(resultsCollectionViewTable.cells.count > 0)
+
+        searchField.clearText()
+        XCTAssertTrue(app.staticTexts["Burgers"].exists)
+    }
+}
+
+extension XCUIElement {
+    func clearText() {
+        guard let stringValue = value as? String else {
+            XCTFail("Tried to clear and enter text into a non string value")
+            return
+        }
+
+        self.tap()
+        typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count))
     }
 }
