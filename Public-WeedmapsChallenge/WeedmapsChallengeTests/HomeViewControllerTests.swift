@@ -10,9 +10,9 @@ class HomeViewControllerTests: XCTestCase {
     func test__UICollectionViewDataSource__cellForRow__loadDataFromAPIWithImageURL__onlyIfNil() {
         let mockHomeViewModel = MockHomeViewModel()
         mockHomeViewModel.nextBusinesses = [
-            Business(id: "id 1", name: "name 1", url: "url 1", price: "", imageURL: "https://www.image1.com"),
-            Business(id: "id 2", name: "name 2", url: "url 2", price: "", imageURL: "https://www.image2.com"),
-            Business(id: "id 3", name: "name 3", url: "url 3", price: "", imageURL: "https://www.image3.com"),
+            Business(id: "id 1", name: "name 1", rating: 0, url: "url 1", price: "", imageURL: "https://www.image1.com"),
+            Business(id: "id 2", name: "name 2", rating: 0, url: "url 2", price: "", imageURL: "https://www.image2.com"),
+            Business(id: "id 3", name: "name 3", rating: 0, url: "url 3", price: "", imageURL: "https://www.image3.com"),
         ]
         mockHomeViewModel.nextImageData = [
             nil,
@@ -37,12 +37,12 @@ class HomeViewControllerTests: XCTestCase {
     func test__UICollectionViewDataSource__willDisplayCell__onlyLoadNewAfterLastFifth() {
         let mockHomeViewModel = MockHomeViewModel()
         mockHomeViewModel.nextBusinesses = [
-            Business(id: "id 1", name: "name 1", url: "url 1", price: "", imageURL: "https://www.image1.com"),
-            Business(id: "id 2", name: "name 2", url: "url 2", price: "", imageURL: "https://www.image2.com"),
-            Business(id: "id 3", name: "name 3", url: "url 3", price: "", imageURL: "https://www.image3.com"),
-            Business(id: "id 4", name: "name 4", url: "url 4", price: "", imageURL: "https://www.image4.com"),
-            Business(id: "id 5", name: "name 5", url: "url 5", price: "", imageURL: "https://www.image5.com"),
-            Business(id: "id 6", name: "name 6", url: "url 6", price: "", imageURL: "https://www.image6.com"),
+            Business(id: "id 1", name: "name 1", rating: 0, url: "url 1", price: "", imageURL: "https://www.image1.com"),
+            Business(id: "id 2", name: "name 2", rating: 0, url: "url 2", price: "", imageURL: "https://www.image2.com"),
+            Business(id: "id 3", name: "name 3", rating: 0, url: "url 3", price: "", imageURL: "https://www.image3.com"),
+            Business(id: "id 4", name: "name 4", rating: 0, url: "url 4", price: "", imageURL: "https://www.image4.com"),
+            Business(id: "id 5", name: "name 5", rating: 0, url: "url 5", price: "", imageURL: "https://www.image5.com"),
+            Business(id: "id 6", name: "name 6", rating: 0, url: "url 6", price: "", imageURL: "https://www.image6.com"),
         ]
         mockHomeViewModel.nextImageData = [
             "first".data(using: .utf8)!,

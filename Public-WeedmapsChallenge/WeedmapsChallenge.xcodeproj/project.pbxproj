@@ -16,7 +16,6 @@
 		5ABB149F2167C42700A2CB2C /* WeedmapsChallengeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB149E2167C42700A2CB2C /* WeedmapsChallengeUITests.swift */; };
 		5ABB14B52167C6EB00A2CB2C /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14B42167C6EB00A2CB2C /* Business.swift */; };
 		5ABB14BC2167CF2400A2CB2C /* HomeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */; };
-		5ABB14BE2167D2D900A2CB2C /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */; };
 		BA6E3009A4DF778DF3DE9B75 /* MockAutoCompleteDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E3FC6DD28DA2B70185EE5 /* MockAutoCompleteDelegate.swift */; };
 		BA6E31020B44B9ACCEB6A89C /* MockHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E36F283A8E19FD34335FA /* MockHomeViewModel.swift */; };
 		BA6E31C175C739EE7402B8F2 /* YelpAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E39F33F64B892B7651C11 /* YelpAPITests.swift */; };
@@ -80,7 +79,6 @@
 		5ABB14A02167C42700A2CB2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5ABB14B42167C6EB00A2CB2C /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
 		5ABB14BB2167CF2400A2CB2C /* HomeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailViewController.swift; sourceTree = "<group>"; };
-		5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessCell.swift; sourceTree = "<group>"; };
 		BA6E30A6BE9D2533B53B706A /* MockSearchViewModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockSearchViewModelDelegate.swift; path = Mocks/MockSearchViewModelDelegate.swift; sourceTree = "<group>"; };
 		BA6E30D968F228319DF12130 /* AutoCompleteResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoCompleteResponse.swift; sourceTree = "<group>"; };
 		BA6E30EEEE9DE68C2A52142B /* MockJSONEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockJSONEncoder.swift; path = Mocks/MockJSONEncoder.swift; sourceTree = "<group>"; };
@@ -271,7 +269,6 @@
 			isa = PBXGroup;
 			children = (
 				5ABB14B42167C6EB00A2CB2C /* Business.swift */,
-				5ABB14BD2167D2D900A2CB2C /* BusinessCell.swift */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -421,7 +418,6 @@
 			files = (
 				5ABB14812167C42300A2CB2C /* FavoritesViewController.swift in Sources */,
 				5A1AC183216D668500E15B8F /* Favorite.swift in Sources */,
-				5ABB14BE2167D2D900A2CB2C /* BusinessCell.swift in Sources */,
 				5ABB14B52167C6EB00A2CB2C /* Business.swift in Sources */,
 				5ABB147D2167C42300A2CB2C /* AppDelegate.swift in Sources */,
 				5ABB147F2167C42300A2CB2C /* HomeViewController.swift in Sources */,

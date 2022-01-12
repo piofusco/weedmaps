@@ -76,7 +76,7 @@ class YelpAPITest: XCTestCase {
         mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
         mockURLSession.nextDataTask = MockURLSessionDataTask()
         let mockJSONDecoder = MockJSONDecoder<Business>()
-        mockJSONDecoder.nextDecodable = Business(id: "", name: "", url: "", price: "", imageURL: "")
+        mockJSONDecoder.nextDecodable = Business(id: "", name: "", rating: 0, url: "", price: "", imageURL: "")
         let subject = YelpAPI(urlSession: mockURLSession, decoder: mockJSONDecoder)
         var completionDidRun = false
 
@@ -330,7 +330,7 @@ class YelpAPITest: XCTestCase {
         mockURLSession.nextResponses = [HTTPURLResponse.Happy200Request]
         mockURLSession.nextDataTask = MockURLSessionDataTask()
         let mockJSONDecoder = MockJSONDecoder<Business>()
-        mockJSONDecoder.nextDecodable = Business(id: "", name: "", url: "", price: "", imageURL: "")
+        mockJSONDecoder.nextDecodable = Business(id: "", name: "", rating: 0, url: "", price: "", imageURL: "")
         let subject = YelpAPI(urlSession: mockURLSession, decoder: mockJSONDecoder)
         var completionDidRun = false
 

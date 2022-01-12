@@ -11,6 +11,7 @@ struct PageResponse: Decodable {
 struct Business: Decodable {
     let id: String
     let name: String
+    let rating: Double?
     let url: String
     let price: String?
     let imageURL: String
@@ -18,6 +19,7 @@ struct Business: Decodable {
     enum CodingKeys: String, CodingKey {
         case id
         case name
+        case rating
         case url
         case price
         case imageURL = "image_url"

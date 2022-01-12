@@ -70,6 +70,7 @@ class HomeViewController: UIViewController {
         searchController = UISearchController(searchResultsController: autoCompleteTableViewController)
         searchController?.searchResultsUpdater = self
         searchController?.searchBar.delegate = self
+        searchController?.searchBar.sizeToFit()
         searchController?.searchBar.placeholder = "Search business names"
         searchController?.obscuresBackgroundDuringPresentation = false
 
@@ -88,7 +89,11 @@ extension HomeViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        cell.setupLabels(name: viewModel.businesses[indexPath.row].name)
+        cell.setupLabels(
+                name: viewModel.businesses[indexPath.row].name,
+                price: viewModel.businesses[indexPath.row].price,
+                rating: viewModel.businesses[indexPath.row].rating
+        )
 
         if let imageData = viewModel.imageCache[indexPath.row] {
             cell.updateImage(data: imageData)
@@ -223,6 +228,7 @@ extension HomeViewController: UISearchBarDelegate {
     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let text = searchBar.text, text.isEmpty else {
             autoCompleteTableViewController.displayPreviousSearches = false
+            searchController?.showsSearchResultsController = false
             return
         }
 
