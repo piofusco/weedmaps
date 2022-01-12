@@ -72,9 +72,12 @@ class HomeViewController: UIViewController {
         searchController?.searchBar.delegate = self
         searchController?.searchBar.sizeToFit()
         searchController?.searchBar.placeholder = "Search business names"
+        searchController?.searchBar.backgroundColor = .white
+        searchController?.searchBar.barTintColor = .white
         searchController?.obscuresBackgroundDuringPresentation = false
 
         navigationItem.searchController = searchController
+        navigationController?.setStatusBar(backgroundColor: .white)
         definesPresentationContext = true
     }
 }
@@ -194,7 +197,6 @@ extension HomeViewController: AutoCompleteDelegate {
         searchController?.showsSearchResultsController = false
         searchController?.searchBar.text = term
         searchController?.searchBar.searchTextField.resignFirstResponder()
-        searchController?.searchBar.showsCancelButton = false
         viewModel.search(term: term)
     }
 }
@@ -207,7 +209,6 @@ extension HomeViewController: UISearchBarDelegate {
         searchController?.showsSearchResultsController = false
         searchController?.searchBar.text = term
         searchController?.searchBar.searchTextField.resignFirstResponder()
-        searchController?.searchBar.showsCancelButton = false
         viewModel.search(term: term)
     }
 
@@ -241,5 +242,19 @@ extension HomeViewController: UISearchBarDelegate {
             self.autoCompleteTableViewController.previousSearches = self.viewModel.previousSearches
             self.autoCompleteTableViewController.tableView.reloadData()
         }
+    }
+}
+
+extension UINavigationController {
+    func setStatusBar(backgroundColor: UIColor) {
+        let statusBarFrame: CGRect
+        if #available(iOS 13.0, *) {
+            statusBarFrame = view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero
+        } else {
+            statusBarFrame = UIApplication.shared.statusBarFrame
+        }
+        let statusBarView = UIView(frame: statusBarFrame)
+        statusBarView.backgroundColor = backgroundColor
+        view.addSubview(statusBarView)
     }
 }
